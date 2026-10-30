@@ -95,7 +95,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .empty-title { font-weight: 700; font-size: 17px; margin-bottom: 8px; color: #000; }
 .empty-desc { font-size: 14px; color: #666; }
 
-/* ПОИСК (ТЕМНАЯ ТЕМА) */
+/* ПОИСК */
 #page-search { background: #111; }
 .search-header { display: flex; align-items: center; padding: 50px 15px 15px; gap: 10px; border-bottom: 1px solid #222; }
 .search-input-box { flex: 1; display: flex; align-items: center; background: #222; border-radius: 8px; padding: 0 12px; }
@@ -124,7 +124,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .chat-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
 .chat-msg { color: #888; font-size: 14px; }
 
-/* МОДАЛКИ (КОММЕНТЫ И ЗАГРУЗКА) - ОСТАВЛЕНЫ БЕЗ ИЗМЕНЕНИЙ В СТИЛЯХ ИЗ ПРЕДЫДУЩЕГО ШАГА */
+/* МОДАЛКИ (КОММЕНТЫ И ЗАГРУЗКА) */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; }
 .modal-overlay.active { display: block; }
 .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #fff; color: #000; z-index: 100; transition: bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 12px 12px 0 0; display: flex; flex-direction: column; }
@@ -198,14 +198,14 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
             <div class="profile-username" id="profile-username">@username</div>
             
             <div class="stats">
-                <div class="stats-item"><b>12</b>Подписки</div>
-                <div class="stats-item"><b>56</b>Подписчики</div>
-                <div class="stats-item"><b>1.2K</b>Лайки</div>
+                <div class="stats-item"><b id="profile-following">0</b>Подписки</div>
+                <div class="stats-item"><b id="profile-followers">0</b>Подписчики</div>
+                <div class="stats-item"><b id="profile-likes">0</b>Лайки</div>
             </div>
             
             <div class="profile-actions">
-                <button class="edit-profile-btn">Изменить профиль</button>
-                <button class="edit-profile-btn" style="padding: 10px; width: 42px;">🔖</button>
+                <button class="edit-profile-btn">НЕДОСТУПНО</button> <!-- Изменить профиль --!>
+                <button class="edit-profile-btn" style="padding: 10px; width: 42px;">?</button> <!-- 🔖 --!>
             </div>
         </div>
         
@@ -299,6 +299,18 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 }
 
+// --- ОБНОВЛЕНИЕ СТАТИСТИКИ ПРОФИЛЯ ---
+function updateProfileStats() {
+    document.getElementById('profile-following').innerText = '0';
+    document.getElementById('profile-followers').innerText = '0';
+    
+    // Считаем сумму всех лайков на видео текущего пользователя
+    const myVideos = DB.filter(v => v.author === tgUser.username);
+    const totalLikes = myVideos.reduce((sum, video) => sum + video.likes, 0);
+    
+    document.getElementById('profile-likes').innerText = formatNumber(totalLikes);
+}
+
 function updateProfileUI() {
     document.getElementById('profile-top-name').innerText = tgUser.first_name;
     document.getElementById('profile-name').innerText = tgUser.first_name;
@@ -307,7 +319,9 @@ function updateProfileUI() {
     if (tgUser.photo_url) {
         document.getElementById('profile-avatar').innerHTML = `<img src="${tgUser.photo_url}" alt="avatar">`;
     }
-    renderProfileVideos(); // Обновляем сетку видео при загрузке
+    
+    updateProfileStats();
+    renderProfileVideos();
 }
 
 // --- БАЗА ДАННЫХ И ПОЛЬЗОВАТЕЛИ ---
@@ -331,7 +345,6 @@ const usersDB = [
     { username: 'qcold', name: 'Focsio', photo: 'https://via.placeholder.com/100/333/fff?text=F' },
 ];
 
-// Добавляем текущего пользователя в базу поиска, если его там нет
 if(!usersDB.find(u => u.username === tgUser.username)) {
     usersDB.push({
         username: tgUser.username,
@@ -361,7 +374,6 @@ function switchPage(page) {
     }
 }
 
-// Утилита для чисел
 function formatNumber(num) {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
@@ -383,7 +395,7 @@ function renderFeed() {
         div.innerHTML = `
             ${media}
             <div class="video-overlay"></div>
-            <!-- Убрали <span>Подписки</span>, оставили только Рекомендации -->
+            <!-- Убрали Подписки -->
             <div class="top-nav"><span class="active">Рекомендации</span></div>
             
             <div class="video-info">
@@ -424,7 +436,6 @@ function renderFeed() {
 // --- ПРОФИЛЬ: СЕТКА ВИДЕО ---
 function renderProfileVideos() {
     const grid = document.getElementById('profile-video-grid');
-    // Ищем видео текущего пользователя
     const myVideos = DB.filter(v => v.author === tgUser.username);
     
     if (myVideos.length === 0) {
@@ -448,7 +459,7 @@ function renderProfileVideos() {
 // --- ПОИСК (ИНТЕРЕСНОЕ) ---
 function handleSearch(query) {
     const container = document.getElementById('search-results');
-    const q = query.trim().toLowerCase().replace('@', ''); // Убираем @ если юзер ввел его
+    const q = query.trim().toLowerCase().replace('@', ''); 
     
     if (!q) {
         container.innerHTML = '<div class="search-empty">Введите имя или @username для поиска</div>';
@@ -497,6 +508,8 @@ function toggleLike(el, id) {
         v.likes--;
     }
     count.innerText = formatNumber(v.likes);
+    
+    updateProfileStats();
 }
 
 function doRepost(id) {
@@ -589,7 +602,7 @@ function publishVideo() {
     reader.onload = function(event) {
         DB.unshift({
             id: Date.now().toString(),
-            author: tgUser.username, // Видео привязывается к текущему пользователю
+            author: tgUser.username,
             desc: desc,
             likes: 0,
             comments: [],
@@ -598,7 +611,8 @@ function publishVideo() {
             music: `Оригинальный звук - ${tgUser.first_name}`
         });
         closeUpload();
-        switchPage('profile'); // Перекидываем в профиль, чтобы показать загруженное видео в сетке
+        updateProfileStats();
+        switchPage('profile');
     };
     reader.readAsDataURL(selectedFile);
 }
