@@ -42,7 +42,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 
 /* ИНФОРМАЦИЯ О ВИДЕО */
 .video-info { position: absolute; bottom: 80px; left: 15px; width: 75%; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-.video-info h3 { font-size: 17px; margin-bottom: 8px; font-weight: 600; }
+.video-info h3 { font-size: 17px; margin-bottom: 8px; font-weight: 600; cursor: pointer; }
 .video-info p { font-size: 15px; line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .music-info { display: flex; align-items: center; gap: 8px; font-size: 14px; }
 .music-ticker { overflow: hidden; white-space: nowrap; width: 150px; display: inline-block; }
@@ -57,7 +57,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .liked { color: #fe2c55; animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
 /* КРУТЯЩАЯСЯ ПЛАСТИНКА */
-.music-disc { width: 45px; height: 45px; background: #222; border-radius: 50%; border: 7px solid #1a1a1a; display: flex; justify-content: center; align-items: center; margin-top: 10px; animation: spin 4s linear infinite; }
+.music-disc { width: 45px; height: 45px; background: #222; border-radius: 50%; border: 7px solid #1a1a1a; display: flex; justify-content: center; align-items: center; margin-top: 10px; animation: spin 4s linear infinite; cursor: pointer;}
 .music-disc img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
 
 /* НИЖНЕЕ МЕНЮ */
@@ -70,10 +70,12 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .plus-btn-inner { background: #fff; color: #000; border-radius: 8px; width: 38px; height: 26px; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; }
 .plus-btn:active { transform: scale(0.95); }
 
-/* ПРОФИЛЬ */
-#page-profile { background: #fff; color: #000; }
+/* ПРОФИЛЬ (МОЙ И ЧУЖОЙ) */
+#page-profile, #page-other-profile { background: #fff; color: #000; }
 .profile-scroll-wrap { height: calc(100vh - 60px); overflow-y: auto; padding-top: 50px; }
-.profile-header-title { position: absolute; top: 0; left: 0; width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; font-weight: 600; font-size: 17px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); z-index: 10; border-bottom: 1px solid #f1f1f2; }
+.profile-header-title { position: absolute; top: 0; left: 0; width: 100%; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; font-weight: 600; font-size: 17px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); z-index: 10; border-bottom: 1px solid #f1f1f2; }
+.profile-header-title .back-btn { font-size: 22px; cursor: pointer; width: 30px; }
+.profile-header-title .empty-space { width: 30px; }
 .profile-header { padding: 20px; text-align: center; }
 .avatar { width: 96px; height: 96px; border-radius: 50%; background: #f0f0f0; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; border: 1px solid #ddd; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -86,6 +88,8 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .profile-actions { display: flex; justify-content: center; gap: 10px; }
 .edit-profile-btn { padding: 10px 30px; border: 1px solid #e3e3e4; border-radius: 4px; font-weight: 600; font-size: 15px; background: transparent; cursor: pointer; transition: background 0.2s; }
 .edit-profile-btn:active { background: #f1f1f2; }
+.btn-primary { background: #fe2c55; color: #fff; border: none; }
+.btn-primary:active { background: #e0274b; }
 
 /* РЕДАКТИРОВАНИЕ ПРОФИЛЯ */
 #page-edit-profile { background: #fff; color: #000; }
@@ -136,17 +140,30 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .user-result-username { font-size: 13px; color: #888; }
 .search-empty { color: #666; text-align: center; margin-top: 50px; font-size: 14px; }
 
-/* ЧАТЫ */
+/* ЧАТЫ И СООБЩЕНИЯ */
 .header-title { padding: 50px 15px 15px; text-align: center; font-size: 18px; font-weight: 600; border-bottom: 1px solid #222; }
 .chat-list { overflow-y: auto; height: calc(100vh - 120px); }
-.chat-item { display: flex; align-items: center; padding: 15px; cursor: pointer; }
+.chat-item { display: flex; align-items: center; padding: 15px; cursor: pointer; border-bottom: 1px solid #222; }
 .chat-item:active { background: #1a1a1a; }
-.chat-avatar { width: 56px; height: 56px; border-radius: 50%; background: #333; margin-right: 15px; display: flex; justify-content: center; align-items: center; font-size: 24px; }
-.chat-info { flex: 1; border-bottom: 1px solid #222; padding-bottom: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.chat-avatar { width: 56px; height: 56px; border-radius: 50%; background: #333; margin-right: 15px; display: flex; justify-content: center; align-items: center; font-size: 24px; overflow: hidden; }
+.chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.chat-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .chat-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-.chat-msg { color: #888; font-size: 14px; }
+.chat-msg { color: #888; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
 
-/* МОДАЛКИ */
+/* ОКНО ЧАТА */
+#page-chat-room { background: #fff; color: #000; }
+.chat-room-header { display: flex; align-items: center; justify-content: space-between; padding: 45px 15px 15px; border-bottom: 1px solid #eee; font-weight: 600; font-size: 17px; background: rgba(255,255,255,0.95); z-index: 10; position: absolute; top: 0; width: 100%; }
+.chat-room-header .back-btn { cursor: pointer; font-size: 24px; }
+.chat-messages { height: calc(100vh - 65px); padding: 75px 15px 80px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #f8f8f8; }
+.chat-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
+.chat-bubble.sent { align-self: flex-end; background: #fe2c55; color: #fff; border-bottom-right-radius: 4px; }
+.chat-bubble.received { align-self: flex-start; background: #e4e4e5; color: #000; border-bottom-left-radius: 4px; }
+.chat-input-area { position: absolute; bottom: 0; width: 100%; padding: 12px 15px; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+.chat-input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 12px 20px; font-size: 15px; outline: none; }
+.chat-input-area button { background: transparent; color: #fe2c55; border: none; font-weight: 700; font-size: 24px; cursor: pointer; }
+
+/* МОДАЛКИ (КОММЕНТЫ И ЗАГРУЗКА) */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; }
 .modal-overlay.active { display: block; }
 .modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #fff; color: #000; z-index: 100; transition: bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 12px 12px 0 0; display: flex; flex-direction: column; }
@@ -155,9 +172,9 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .close-btn { position: absolute; right: 15px; top: 15px; font-size: 20px; cursor: pointer; color: #000; }
 .comments-list { flex: 1; overflow-y: auto; padding: 15px; }
 .comment { display: flex; gap: 12px; margin-bottom: 20px; }
-.comment-avatar { width: 36px; height: 36px; border-radius: 50%; background: #eee; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.comment-avatar { width: 36px; height: 36px; border-radius: 50%; background: #eee; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.comment-user { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 4px; }
+.comment-user { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 4px; cursor: pointer; }
 .comment-text { font-size: 15px; color: #000; }
 .input-area { padding: 12px 15px 25px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; align-items: center; }
 .input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 12px 20px; font-size: 15px; outline: none; }
@@ -194,47 +211,87 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
     </div>
 </div>
 
-<!-- ЧАТЫ -->
+<!-- ЧАТЫ (ВХОДЯЩИЕ) -->
 <div id="page-chats" class="page">
     <div class="header-title">Входящие</div>
-    <div class="chat-list">
-        <div class="chat-item" onclick="showToast('Tikstatus: Открыт чат')">
-            <div class="chat-avatar">👤</div>
-            <div class="chat-info">
-                <div class="chat-name">Новый подписчик</div>
-                <div class="chat-msg">Подписался(-ась) на вас</div>
-            </div>
-        </div>
+    <div class="chat-list" id="chat-list-container">
+        <!-- Генерируется через JS -->
     </div>
 </div>
 
-<!-- ПРОФИЛЬ -->
+<!-- ОТКРЫТЫЙ ЧАТ (ПЕРЕПИСКА) -->
+<div id="page-chat-room" class="page">
+    <div class="chat-room-header">
+        <span class="back-btn" onclick="switchPage(lastPage || 'chats')">←</span>
+        <span id="chat-room-name">Имя пользователя</span>
+        <span style="width: 24px;"></span>
+    </div>
+    <div class="chat-messages" id="chat-messages-container">
+        <!-- Сообщения -->
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatMessageInput" placeholder="Отправить сообщение...">
+        <button onclick="sendChatMessage()">⬆</button>
+    </div>
+</div>
+
+<!-- ПРОФИЛЬ (МОЙ) -->
 <div id="page-profile" class="page">
-    <div class="profile-header-title" id="profile-top-name">Профиль</div>
+    <div class="profile-header-title">
+        <span class="empty-space"></span>
+        <span id="profile-top-name">Профиль</span>
+        <span class="empty-space"></span>
+    </div>
     <div class="profile-scroll-wrap">
         <div class="profile-header">
             <div class="avatar" id="profile-avatar">👤</div>
             <div class="profile-name" id="profile-name">Имя пользователя</div>
             <div class="profile-username" id="profile-username">@username</div>
-            <div class="profile-bio" id="profile-bio"></div> <!-- НОВОЕ: Описание -->
+            <div class="profile-bio" id="profile-bio"></div>
             <div class="stats">
                 <div class="stats-item"><b id="profile-following">0</b>Подписки</div>
                 <div class="stats-item"><b id="profile-followers">0</b>Подписчики</div>
                 <div class="stats-item"><b id="profile-likes">0</b>Лайки</div>
             </div>
             <div class="profile-actions">
-                <button class="edit-profile-btn" onclick="openEditProfile()">Изменить профиль</button> <!-- РАБОЧАЯ КНОПКА -->
+                <button class="edit-profile-btn" onclick="openEditProfile()">Изменить профиль</button>
                 <button class="edit-profile-btn" style="padding: 10px; width: 42px;" onclick="showToast('Tikstatus: Закладки')">🔖</button>
             </div>
         </div>
-        <div class="profile-tabs">
-            <div class="tab active">☰</div>
-        </div>
+        <div class="profile-tabs"><div class="tab active">☰</div></div>
         <div id="profile-video-grid" class="profile-video-grid"></div>
     </div>
 </div>
 
-<!-- РЕДАКТИРОВАНИЕ ПРОФИЛЯ (НОВАЯ СТРАНИЦА) -->
+<!-- ПРОФИЛЬ (ЧУЖОЙ) -->
+<div id="page-other-profile" class="page">
+    <div class="profile-header-title">
+        <span class="back-btn" onclick="switchPage(lastPage || 'home')">←</span>
+        <span id="other-profile-top-name">Профиль</span>
+        <span class="empty-space"></span>
+    </div>
+    <div class="profile-scroll-wrap">
+        <div class="profile-header">
+            <div class="avatar" id="other-profile-avatar">👤</div>
+            <div class="profile-name" id="other-profile-name">Имя пользователя</div>
+            <div class="profile-username" id="other-profile-username">@username</div>
+            <div class="profile-bio" id="other-profile-bio"></div>
+            <div class="stats">
+                <div class="stats-item"><b>12</b>Подписки</div>
+                <div class="stats-item"><b id="other-profile-followers">0</b>Подписчики</div>
+                <div class="stats-item"><b id="other-profile-likes">0</b>Лайки</div>
+            </div>
+            <div class="profile-actions">
+                <button class="edit-profile-btn btn-primary" onclick="showToast('Tikstatus: Вы подписались!')">Подписаться</button>
+                <button class="edit-profile-btn" onclick="openChatFromProfile()">Сообщение</button>
+            </div>
+        </div>
+        <div class="profile-tabs"><div class="tab active">☰</div></div>
+        <div id="other-profile-video-grid" class="profile-video-grid"></div>
+    </div>
+</div>
+
+<!-- РЕДАКТИРОВАНИЕ ПРОФИЛЯ -->
 <div id="page-edit-profile" class="page">
     <div class="edit-profile-header">
         <span class="back-btn" onclick="switchPage('profile')">←</span>
@@ -249,18 +306,9 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
         <div class="edit-avatar-text" onclick="document.getElementById('editAvatarInput').click()">Изменить фото</div>
         <input type="file" id="editAvatarInput" accept="image/*" style="display:none;" onchange="previewEditAvatar(event)">
         
-        <div class="edit-field">
-            <label>Имя</label>
-            <input type="text" id="edit-name-input" placeholder="Ваше имя">
-        </div>
-        <div class="edit-field">
-            <label>Имя пользователя (Никнейм)</label>
-            <input type="text" id="edit-username-input" placeholder="Только латинские буквы и цифры">
-        </div>
-        <div class="edit-field">
-            <label>Описание</label>
-            <textarea id="edit-bio-input" placeholder="Расскажите о себе"></textarea>
-        </div>
+        <div class="edit-field"><label>Имя</label><input type="text" id="edit-name-input" placeholder="Ваше имя"></div>
+        <div class="edit-field"><label>Имя пользователя (Никнейм)</label><input type="text" id="edit-username-input" placeholder="Только латинские буквы и цифры"></div>
+        <div class="edit-field"><label>Описание</label><textarea id="edit-bio-input" placeholder="Расскажите о себе"></textarea></div>
     </div>
 </div>
 
@@ -307,14 +355,10 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
 </div>
 
 <script>
-// --- КАСТОМНЫЕ УВЕДОМЛЕНИЯ TIKSTATUS ---
+// --- УВЕДОМЛЕНИЯ ---
 function showToast(msg) {
     let container = document.getElementById('toast-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'toast-container';
-        document.body.appendChild(container);
-    }
+    if (!container) { container = document.createElement('div'); container.id = 'toast-container'; document.body.appendChild(container); }
     const toast = document.createElement('div');
     toast.className = 'tikstatus-toast';
     toast.innerText = msg;
@@ -322,224 +366,188 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// --- TELEGRAM WEB APP & ИНИЦИАЛИЗАЦИЯ ПРОФИЛЯ ---
-let tgUser = {
-    username: 'user' + Math.floor(Math.random()*1000),
-    first_name: 'Пользователь',
-    photo_url: ''
-};
-
+// --- TELEGRAM WEB APP & ДАННЫЕ ПРОФИЛЯ ---
+let tgUser = { username: 'user' + Math.floor(Math.random()*1000), first_name: 'Пользователь', photo_url: '' };
 if (window.Telegram && window.Telegram.WebApp) {
-    const tg = window.Telegram.WebApp;
-    tg.expand(); 
-    tg.ready();
+    const tg = window.Telegram.WebApp; tg.expand(); tg.ready();
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        const user = tg.initDataUnsafe.user;
-        tgUser.username = user.username || user.first_name;
-        tgUser.first_name = user.first_name;
-        tgUser.photo_url = user.photo_url || '';
+        const user = tg.initDataUnsafe.user; tgUser.username = user.username || user.first_name; tgUser.first_name = user.first_name; tgUser.photo_url = user.photo_url || '';
     }
 }
 
-// Загружаем личный профиль из памяти или создаем на основе Telegram данных
-let myProfile = JSON.parse(localStorage.getItem('tiktok_myProfile'));
-if (!myProfile) {
-    myProfile = {
-        username: tgUser.username,
-        name: tgUser.first_name,
-        photo: tgUser.photo_url,
-        bio: 'Добавьте описание профиля'
-    };
-    localStorage.setItem('tiktok_myProfile', JSON.stringify(myProfile));
-}
-
-// --- БАЗА ДАННЫХ И ЛОКАЛЬНОЕ СОХРАНЕНИЕ ---
-let defaultDB = [
-    { 
-        id: '1', 
-        author: 'tiktok_russia', 
-        desc: 'Добро пожаловать в обновленный клон! 🚀 #тренды', 
-        likes: 10420, 
-        comments: [{user:'durov', text:'Отличный дизайн!'}], 
-        src: '',
-        reposted: false,
-        music: 'Оригинальный звук - tiktok_russia'
-    }
-];
-
-let defaultUsersDB = [
-    { username: 'tiktok_russia', name: 'TikTok Россия', photo: 'https://via.placeholder.com/100/fe2c55/fff?text=TT' },
-    { username: 'durov', name: 'Pavel Durov', photo: 'https://via.placeholder.com/100/25f4ee/fff?text=PD' },
-    { username: 'qcold', name: 'Focsio', photo: 'https://via.placeholder.com/100/333/fff?text=F' },
-];
-
-let DB = JSON.parse(localStorage.getItem('tiktok_DB')) || defaultDB;
-let usersDB = JSON.parse(localStorage.getItem('tiktok_usersDB')) || defaultUsersDB;
+let myProfile = JSON.parse(localStorage.getItem('tiktok_myProfile')) || { username: tgUser.username, name: tgUser.first_name, photo: tgUser.photo_url, bio: 'Добавьте описание профиля' };
+let DB = JSON.parse(localStorage.getItem('tiktok_DB')) || [{ id: '1', author: 'tiktok_russia', desc: 'Добро пожаловать в Tikstatus! 🚀', likes: 10420, comments: [{user:'durov', text:'Отличный дизайн!'}], src: '', reposted: false, music: 'Оригинальный звук - tiktok_russia' }];
+let usersDB = JSON.parse(localStorage.getItem('tiktok_usersDB')) || [{ username: 'tiktok_russia', name: 'TikTok Россия', photo: 'https://via.placeholder.com/100/fe2c55/fff?text=TT', bio:'Официальный аккаунт.' }, { username: 'durov', name: 'Pavel Durov', photo: 'https://via.placeholder.com/100/25f4ee/fff?text=PD', bio:'Founder of Telegram' }];
+let chatsDB = JSON.parse(localStorage.getItem('tiktok_chatsDB')) || {}; // База сообщений
 
 function saveData() {
     try {
         localStorage.setItem('tiktok_DB', JSON.stringify(DB));
         localStorage.setItem('tiktok_usersDB', JSON.stringify(usersDB));
         localStorage.setItem('tiktok_myProfile', JSON.stringify(myProfile));
-    } catch (e) {
-        console.warn('Ошибка сохранения в localStorage:', e);
-        showToast('Tikstatus: Память переполнена! Загрузите фото/видео меньшего размера.');
-    }
+        localStorage.setItem('tiktok_chatsDB', JSON.stringify(chatsDB));
+    } catch (e) { console.warn('Ошибка сохранения', e); }
 }
 
-// Добавляем текущего пользователя в базу поиска, если его там нет
-if(!usersDB.find(u => u.username === myProfile.username)) {
-    usersDB.push({ username: myProfile.username, name: myProfile.name, photo: myProfile.photo });
-    saveData();
-}
-
-// --- ПРОФИЛЬ И РЕДАКТИРОВАНИЕ ---
-function updateProfileStats() {
-    document.getElementById('profile-following').innerText = '0';
-    document.getElementById('profile-followers').innerText = '0';
-    const myVideos = DB.filter(v => v.author === myProfile.username);
-    const totalLikes = myVideos.reduce((sum, video) => sum + video.likes, 0);
-    document.getElementById('profile-likes').innerText = formatNumber(totalLikes);
-}
-
-function updateProfileUI() {
-    document.getElementById('profile-top-name').innerText = myProfile.name;
-    document.getElementById('profile-name').innerText = myProfile.name;
-    document.getElementById('profile-username').innerText = '@' + myProfile.username;
-    document.getElementById('profile-bio').innerText = myProfile.bio || '';
-    
-    if (myProfile.photo) {
-        document.getElementById('profile-avatar').innerHTML = `<img src="${myProfile.photo}" alt="avatar">`;
-    } else {
-        document.getElementById('profile-avatar').innerHTML = `👤`;
-    }
-    
-    updateProfileStats();
-    renderProfileVideos();
-}
-
-// Открытие страницы редактирования профиля
-function openEditProfile() {
-    document.getElementById('edit-name-input').value = myProfile.name;
-    document.getElementById('edit-username-input').value = myProfile.username;
-    document.getElementById('edit-bio-input').value = myProfile.bio || '';
-    
-    if(myProfile.photo) {
-        document.getElementById('edit-avatar-preview').innerHTML = `<img src="${myProfile.photo}">`;
-    } else {
-        document.getElementById('edit-avatar-preview').innerHTML = `👤`;
-    }
-    
-    switchPage('edit-profile');
-}
-
-// Предпросмотр загруженной аватарки
-let tempAvatarDataUrl = null;
-function previewEditAvatar(e) {
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        tempAvatarDataUrl = event.target.result;
-        document.getElementById('edit-avatar-preview').innerHTML = `<img src="${tempAvatarDataUrl}">`;
-    };
-    reader.readAsDataURL(file);
-}
-
-// Сохранение отредактированного профиля
-function saveProfile() {
-    const newName = document.getElementById('edit-name-input').value.trim();
-    const newUsername = document.getElementById('edit-username-input').value.trim().replace(/[^a-zA-Z0-9_.]/g, ''); // Только латиница и цифры
-    const newBio = document.getElementById('edit-bio-input').value.trim();
-    
-    if(!newName || !newUsername) return showToast('Tikstatus: Имя и юзернейм не могут быть пустыми!');
-    
-    const oldUsername = myProfile.username;
-    
-    // Если юзернейм изменился, нужно обновить авторство во всех видео и комментах
-    if (oldUsername !== newUsername) {
-        DB.forEach(v => {
-            if(v.author === oldUsername) v.author = newUsername;
-            v.comments.forEach(c => {
-                if(c.user === oldUsername) c.user = newUsername;
-            });
-        });
-        
-        let u = usersDB.find(x => x.username === oldUsername);
-        if(u) u.username = newUsername;
-    }
-    
-    myProfile.name = newName;
-    myProfile.username = newUsername;
-    myProfile.bio = newBio;
-    if (tempAvatarDataUrl) myProfile.photo = tempAvatarDataUrl;
-    
-    // Обновляем данные для поиска
-    let searchUser = usersDB.find(x => x.username === myProfile.username);
-    if(searchUser) {
-        searchUser.name = myProfile.name;
-        searchUser.photo = myProfile.photo;
-    }
-    
-    saveData();
-    updateProfileUI();
-    showToast('Tikstatus: Профиль успешно обновлен!');
-    switchPage('profile');
-}
+if(!usersDB.find(u => u.username === myProfile.username)) { usersDB.push({ username: myProfile.username, name: myProfile.name, photo: myProfile.photo, bio: myProfile.bio }); saveData(); }
 
 // --- НАВИГАЦИЯ ---
+let lastPage = 'home';
+let currentPage = 'home';
+
 function switchPage(page) {
+    if(currentPage !== 'edit-profile' && currentPage !== 'other-profile' && currentPage !== 'chat-room') {
+        lastPage = currentPage; // Запоминаем откуда пришли, чтобы возвращаться кнопкой "назад"
+    }
+    currentPage = page;
+    
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('upload-page').classList.remove('active');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     
     document.getElementById('page-' + page).classList.add('active');
     
-    // Прячем нижнее меню на странице редактирования
-    document.getElementById('main-nav').style.display = (page === 'edit-profile') ? 'none' : 'flex';
+    // Прячем нижнее меню на определенных страницах
+    const hideNavPages = ['edit-profile', 'other-profile', 'chat-room'];
+    document.getElementById('main-nav').style.display = hideNavPages.includes(page) ? 'none' : 'flex';
     
-    // Подсветка кнопок меню
     let navItem = document.getElementById('nav-' + page);
     if(navItem) navItem.classList.add('active');
     
-    if(page === 'home') { document.body.classList.add('feed-active'); renderFeed(); } 
-    else { document.body.classList.remove('feed-active'); }
-    if(page === 'profile') { renderProfileVideos(); }
+    if(page === 'home') { document.body.classList.add('feed-active'); renderFeed(); } else { document.body.classList.remove('feed-active'); }
+    if(page === 'profile') { updateProfileUI(); renderProfileVideos(); }
+    if(page === 'chats') { renderChatList(); }
 }
 
-function formatNumber(num) {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num;
+function formatNumber(num) { return num >= 1000000 ? (num / 1000000).toFixed(1) + 'M' : num >= 1000 ? (num / 1000).toFixed(1) + 'K' : num; }
+
+// --- МОЙ ПРОФИЛЬ ---
+function updateProfileUI() {
+    document.getElementById('profile-top-name').innerText = myProfile.name;
+    document.getElementById('profile-name').innerText = myProfile.name;
+    document.getElementById('profile-username').innerText = '@' + myProfile.username;
+    document.getElementById('profile-bio').innerText = myProfile.bio || '';
+    document.getElementById('profile-avatar').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : `👤`;
+    
+    const myVideos = DB.filter(v => v.author === myProfile.username);
+    document.getElementById('profile-likes').innerText = formatNumber(myVideos.reduce((sum, v) => sum + v.likes, 0));
+}
+function renderProfileVideos() { renderGrid('profile-video-grid', myProfile.username); }
+
+// --- ЧУЖОЙ ПРОФИЛЬ ---
+let currentOtherUser = null;
+function openOtherProfile(username) {
+    if(username === myProfile.username) { switchPage('profile'); return; }
+    
+    currentOtherUser = usersDB.find(u => u.username === username) || { username: username, name: username, photo: '', bio: 'Нет описания' };
+    
+    document.getElementById('other-profile-top-name').innerText = currentOtherUser.name;
+    document.getElementById('other-profile-name').innerText = currentOtherUser.name;
+    document.getElementById('other-profile-username').innerText = '@' + currentOtherUser.username;
+    document.getElementById('other-profile-bio').innerText = currentOtherUser.bio || 'Нет описания';
+    document.getElementById('other-profile-avatar').innerHTML = currentOtherUser.photo ? `<img src="${currentOtherUser.photo}">` : '👤';
+    
+    const theirVids = DB.filter(v => v.author === currentOtherUser.username);
+    document.getElementById('other-profile-likes').innerText = formatNumber(theirVids.reduce((sum, v) => sum + v.likes, 0));
+    document.getElementById('other-profile-followers').innerText = formatNumber(Math.floor(Math.random() * 50000) + 100); // Фейковые подписчики
+    
+    renderGrid('other-profile-video-grid', currentOtherUser.username);
+    closeComments(); // Закрываем модалку комментов, если перешли из неё
+    switchPage('other-profile');
+}
+
+function renderGrid(containerId, username) {
+    const grid = document.getElementById(containerId);
+    const videos = DB.filter(v => v.author === username);
+    if (videos.length === 0) {
+        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📹</div><div class="empty-title">Нет видео</div></div>`;
+    } else {
+        grid.innerHTML = videos.map(v => `<div class="grid-item" onclick="switchPage('home')">${v.src ? `<video src="${v.src}#t=0.1" preload="metadata"></video>` : `<div style="width:100%;height:100%;background:#222;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;">📹</div>`}<div class="views">▷ ${formatNumber(v.likes + 15)}</div></div>`).join('');
+    }
+}
+
+// --- ЧАТЫ (МЕССЕНДЖЕР) ---
+function renderChatList() {
+    const list = document.getElementById('chat-list-container');
+    const allUsers = usersDB.filter(u => u.username !== myProfile.username); // Покажем всех для демо
+    
+    list.innerHTML = allUsers.map(u => {
+        const history = chatsDB[u.username] || [];
+        const lastMsg = history.length > 0 ? history[history.length-1].text : 'Начните чат...';
+        return `
+        <div class="chat-item" onclick="openChat('${u.username}')">
+            <div class="chat-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
+            <div class="chat-info">
+                <div class="chat-name">${u.name}</div>
+                <div class="chat-msg">${lastMsg}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+let activeChatUser = null;
+function openChat(username) {
+    activeChatUser = usersDB.find(u => u.username === username) || {username:username, name:username, photo:''};
+    document.getElementById('chat-room-name').innerText = activeChatUser.name;
+    renderChatMessages();
+    switchPage('chat-room');
+}
+
+function openChatFromProfile() {
+    if(currentOtherUser) openChat(currentOtherUser.username);
+}
+
+function renderChatMessages() {
+    const container = document.getElementById('chat-messages-container');
+    const history = chatsDB[activeChatUser.username] || [];
+    container.innerHTML = history.map(m => `
+        <div class="chat-bubble ${m.sender === myProfile.username ? 'sent' : 'received'}">${m.text}</div>
+    `).join('');
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chatMessageInput');
+    const text = input.value.trim();
+    if(!text) return;
+    
+    if(!chatsDB[activeChatUser.username]) chatsDB[activeChatUser.username] = [];
+    chatsDB[activeChatUser.username].push({sender: myProfile.username, text: text});
+    saveData();
+    input.value = '';
+    renderChatMessages();
+    
+    // Авто-ответ бота для интерактивности
+    setTimeout(() => {
+        chatsDB[activeChatUser.username].push({sender: activeChatUser.username, text: 'Привет! Это тестовый ответ от клона 🤖'});
+        saveData();
+        if(currentPage === 'chat-room') renderChatMessages();
+    }, 2000);
 }
 
 // --- ЛЕНТА ВИДЕО ---
 function renderFeed() {
     const feed = document.getElementById('videoFeed');
     feed.innerHTML = '';
-    
     DB.forEach(v => {
         const div = document.createElement('div');
         div.className = 'video-container';
         let media = v.src ? `<video src="${v.src}" loop muted playsinline autoplay></video>` : `<div class="text-placeholder">📹 Видео</div>`;
-        let repost = v.reposted ? `<div class="repost-badge">🔁 Вы репостнули</div>` : '';
-
-        // Ищем аватарку автора видео (если он есть в базе)
         let authorData = usersDB.find(u => u.username === v.author);
-        let avatarSrc = authorData && authorData.photo ? authorData.photo : (myProfile.photo || 'https://via.placeholder.com/40/333/fff?text=🎵');
+        let avatarSrc = authorData && authorData.photo ? authorData.photo : 'https://via.placeholder.com/40/333/fff?text=🎵';
 
         div.innerHTML = `
             ${media}
             <div class="video-overlay"></div>
             <div class="top-nav"><span class="active">Рекомендации</span></div>
             <div class="video-info">
-                ${repost}
-                <h3>@${v.author}</h3>
+                ${v.reposted ? `<div class="repost-badge">🔁 Вы репостнули</div>` : ''}
+                <h3 onclick="openOtherProfile('${v.author}')">@${v.author}</h3>
                 <p>${v.desc}</p>
                 <div class="music-info">🎵 <div class="music-ticker"><marquee scrollamount="4">${v.music}</marquee></div></div>
             </div>
             <div class="side-buttons">
-                <div class="btn-wrapper" onclick="toggleLike(this, '${v.id}')">
+                <div class="btn-wrapper" onclick="toggleLike('${v.id}')">
                     <div class="btn-icon-box" id="like-icon-${v.id}">${v.likedByMe ? '❤️' : '🤍'}</div>
                     <div class="btn-text" id="like-count-${v.id}">${formatNumber(v.likes)}</div>
                 </div>
@@ -555,9 +563,7 @@ function renderFeed() {
                     <div class="btn-icon-box">↗️</div>
                     <div class="btn-text">Поделиться</div>
                 </div>
-                <div class="music-disc">
-                    <img src="${avatarSrc}" alt="music">
-                </div>
+                <div class="music-disc" onclick="openOtherProfile('${v.author}')"><img src="${avatarSrc}"></div>
             </div>
         `;
         if (v.likedByMe) div.querySelector(`#like-icon-${v.id}`).classList.add('liked');
@@ -565,26 +571,50 @@ function renderFeed() {
     });
 }
 
-function renderProfileVideos() {
-    const grid = document.getElementById('profile-video-grid');
-    const myVideos = DB.filter(v => v.author === myProfile.username);
+function toggleLike(id) {
+    const v = DB.find(x => x.id === id);
+    v.likedByMe ? (v.likes--, v.likedByMe = false) : (v.likes++, v.likedByMe = true);
+    document.getElementById(`like-icon-${id}`).innerText = v.likedByMe ? '❤️' : '🤍';
+    document.getElementById(`like-icon-${id}`).className = `btn-icon-box ${v.likedByMe ? 'liked' : ''}`;
+    document.getElementById(`like-count-${id}`).innerText = formatNumber(v.likes);
+    saveData(); 
+}
+
+function doRepost(id) {
+    const v = DB.find(x => x.id === id);
+    if(v.reposted) return showToast('Tikstatus: Вы уже репостнули это видео');
+    v.reposted = true; renderFeed(); saveData(); 
+}
+
+// --- КОММЕНТАРИИ ---
+let currentVid = null;
+function openComments(id) {
+    currentVid = id;
+    const v = DB.find(x => x.id === id);
+    document.getElementById('comment-count-title').innerText = `${v.comments.length} комментариев`;
+    document.getElementById('commentsList').innerHTML = v.comments.map(c => `
+        <div class="comment">
+            <div class="comment-avatar" onclick="openOtherProfile('${c.user}')">${c.photo ? `<img src="${c.photo}">` : `👤`}</div>
+            <div><div class="comment-user" onclick="openOtherProfile('${c.user}')">${c.user}</div><div class="comment-text">${c.text}</div></div>
+        </div>`).join('');
+    document.getElementById('modalOverlay').classList.add('active');
+    setTimeout(() => { document.getElementById('commentsModal').classList.add('open'); }, 10);
+}
+function closeComments() {
+    document.getElementById('commentsModal').classList.remove('open');
+    setTimeout(() => { document.getElementById('modalOverlay').classList.remove('active'); }, 300);
+}
+function addComment() {
+    const input = document.getElementById('commentInput');
+    if(!input.value.trim()) return;
+    const v = DB.find(x => x.id === currentVid);
+    v.comments.push({ user: myProfile.username, text: input.value, photo: myProfile.photo });
+    document.getElementById('comment-count-' + currentVid).innerText = formatNumber(v.comments.length);
+    document.getElementById('comment-count-title').innerText = `${v.comments.length} комментариев`;
     
-    if (myVideos.length === 0) {
-        grid.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">📹</div>
-                <div class="empty-title">Ни одного видео пока нет.</div>
-                <div class="empty-desc">Опубликуйте свое первое видео</div>
-            </div>
-        `;
-    } else {
-        grid.innerHTML = myVideos.map(v => `
-            <div class="grid-item" onclick="switchPage('home')">
-                ${v.src ? `<video src="${v.src}#t=0.1" preload="metadata"></video>` : `<div style="width:100%;height:100%;background:#222;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;">📹</div>`}
-                <div class="views">▷ ${formatNumber(v.likes + 15)}</div>
-            </div>
-        `).join('');
-    }
+    let avatarTag = myProfile.photo ? `<img src="${myProfile.photo}">` : `👤`;
+    document.getElementById('commentsList').innerHTML += `<div class="comment" style="animation: fadeIn 0.3s ease;"><div class="comment-avatar">${avatarTag}</div><div><div class="comment-user">${myProfile.username}</div><div class="comment-text">${input.value}</div></div></div>`;
+    input.value = ''; document.getElementById('commentsList').scrollTop = document.getElementById('commentsList').scrollHeight; saveData();
 }
 
 // --- ПОИСК ---
@@ -593,143 +623,64 @@ function handleSearch(query) {
     const q = query.trim().toLowerCase().replace('@', ''); 
     if (!q) { container.innerHTML = '<div class="search-empty">Введите имя или @username для поиска</div>'; return; }
     const results = usersDB.filter(u => u.username.toLowerCase().includes(q) || u.name.toLowerCase().includes(q));
-    if (results.length === 0) {
-        container.innerHTML = `<div class="search-empty">Пользователь не найден</div>`;
-    } else {
-        container.innerHTML = results.map(u => `
-            <div class="user-result" onclick="showToast('Tikstatus: Переход в профиль @${u.username}')">
-                <div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
-                <div class="user-result-info"><div class="user-result-name">${u.name}</div><div class="user-result-username">@${u.username}</div></div>
-            </div>
-        `).join('');
+    container.innerHTML = results.length === 0 ? `<div class="search-empty">Пользователь не найден</div>` : results.map(u => `
+        <div class="user-result" onclick="openOtherProfile('${u.username}')">
+            <div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
+            <div class="user-result-info"><div class="user-result-name">${u.name}</div><div class="user-result-username">@${u.username}</div></div>
+        </div>`).join('');
+}
+function clearSearch() { document.getElementById('searchInput').value = ''; handleSearch(''); }
+
+// --- РЕДАКТИРОВАНИЕ ПРОФИЛЯ (СТРАНИЦА) ---
+function openEditProfile() {
+    document.getElementById('edit-name-input').value = myProfile.name;
+    document.getElementById('edit-username-input').value = myProfile.username;
+    document.getElementById('edit-bio-input').value = myProfile.bio || '';
+    document.getElementById('edit-avatar-preview').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : `👤`;
+    switchPage('edit-profile');
+}
+let tempAvatarDataUrl = null;
+function previewEditAvatar(e) {
+    if(!e.target.files[0]) return;
+    const reader = new FileReader();
+    reader.onload = function(event) { tempAvatarDataUrl = event.target.result; document.getElementById('edit-avatar-preview').innerHTML = `<img src="${tempAvatarDataUrl}">`; };
+    reader.readAsDataURL(e.target.files[0]);
+}
+function saveProfile() {
+    const newName = document.getElementById('edit-name-input').value.trim();
+    const newUsername = document.getElementById('edit-username-input').value.trim().replace(/[^a-zA-Z0-9_.]/g, '');
+    if(!newName || !newUsername) return showToast('Tikstatus: Имя и юзернейм обязательны!');
+    
+    const oldUsername = myProfile.username;
+    if (oldUsername !== newUsername) {
+        DB.forEach(v => { if(v.author === oldUsername) v.author = newUsername; v.comments.forEach(c => { if(c.user === oldUsername) c.user = newUsername; }); });
+        let u = usersDB.find(x => x.username === oldUsername); if(u) u.username = newUsername;
     }
-}
-
-function clearSearch() {
-    document.getElementById('searchInput').value = '';
-    handleSearch('');
-}
-
-// --- ДЕЙСТВИЯ ---
-function toggleLike(el, id) {
-    const v = DB.find(x => x.id === id);
-    const icon = document.getElementById('like-icon-' + id);
-    const count = document.getElementById('like-count-' + id);
     
-    if (v.likedByMe) {
-        icon.innerText = '🤍';
-        icon.classList.remove('liked');
-        v.likes--;
-        v.likedByMe = false;
-    } else {
-        icon.innerText = '❤️';
-        icon.classList.add('liked');
-        v.likes++;
-        v.likedByMe = true;
-    }
+    myProfile.name = newName; myProfile.username = newUsername; myProfile.bio = document.getElementById('edit-bio-input').value.trim();
+    if (tempAvatarDataUrl) myProfile.photo = tempAvatarDataUrl;
     
-    count.innerText = formatNumber(v.likes);
-    updateProfileStats();
-    saveData(); 
-}
-
-function doRepost(id) {
-    const v = DB.find(x => x.id === id);
-    if(v.reposted) return showToast('Tikstatus: Вы уже репостнули это видео');
-    v.reposted = true;
-    renderFeed();
-    saveData(); 
-}
-
-// --- КОММЕНТАРИИ ---
-let currentVid = null;
-function openComments(id) {
-    currentVid = id;
-    const v = DB.find(x => x.id === id);
-    const list = document.getElementById('commentsList');
-    document.getElementById('comment-count-title').innerText = `${v.comments.length} комментариев`;
-    list.innerHTML = '';
+    let searchUser = usersDB.find(x => x.username === myProfile.username);
+    if(searchUser) { searchUser.name = myProfile.name; searchUser.photo = myProfile.photo; }
     
-    v.comments.forEach(c => {
-        let avatarTag = c.photo ? `<img src="${c.photo}">` : `👤`;
-        list.innerHTML += `<div class="comment"><div class="comment-avatar">${avatarTag}</div><div><div class="comment-user">${c.user}</div><div class="comment-text">${c.text}</div></div></div>`;
-    });
-    
-    document.getElementById('modalOverlay').classList.add('active');
-    setTimeout(() => { document.getElementById('commentsModal').classList.add('open'); }, 10);
-}
-
-function closeComments() {
-    document.getElementById('commentsModal').classList.remove('open');
-    setTimeout(() => { document.getElementById('modalOverlay').classList.remove('active'); }, 300);
-}
-
-function addComment() {
-    const input = document.getElementById('commentInput');
-    if(!input.value.trim()) return;
-    const v = DB.find(x => x.id === currentVid);
-    
-    v.comments.push({ user: myProfile.username, text: input.value, photo: myProfile.photo });
-    document.getElementById('comment-count-' + currentVid).innerText = formatNumber(v.comments.length);
-    document.getElementById('comment-count-title').innerText = `${v.comments.length} комментариев`;
-    
-    let avatarTag = myProfile.photo ? `<img src="${myProfile.photo}">` : `👤`;
-    document.getElementById('commentsList').innerHTML += `<div class="comment" style="animation: fadeIn 0.3s ease;"><div class="comment-avatar">${avatarTag}</div><div><div class="comment-user">${myProfile.username}</div><div class="comment-text">${input.value}</div></div></div>`;
-    
-    input.value = '';
-    const list = document.getElementById('commentsList');
-    list.scrollTop = list.scrollHeight;
-    
-    saveData();
+    saveData(); updateProfileUI(); showToast('Tikstatus: Профиль обновлен!'); switchPage('profile');
 }
 
 // --- ЗАГРУЗКА ВИДЕО ---
 let selectedFile = null;
-function openUpload() {
-    document.getElementById('upload-page').classList.add('active');
-    document.getElementById('previewVideo').style.display = 'none';
-    document.getElementById('uploadIcon').style.display = 'block';
-    document.getElementById('uploadText').style.display = 'block';
-    document.getElementById('videoDesc').value = '';
-    selectedFile = null;
-}
-
+function openUpload() { document.getElementById('upload-page').classList.add('active'); document.getElementById('previewVideo').style.display = 'none'; document.getElementById('uploadIcon').style.display = 'block'; document.getElementById('uploadText').style.display = 'block'; document.getElementById('videoDesc').value = ''; selectedFile = null; }
 function closeUpload() { document.getElementById('upload-page').classList.remove('active'); }
-
 function previewFile(e) {
-    const file = e.target.files[0];
-    if(!file) return;
-    selectedFile = file;
-    const video = document.getElementById('previewVideo');
-    video.src = URL.createObjectURL(file);
-    video.style.display = 'block';
-    document.getElementById('uploadIcon').style.display = 'none';
-    document.getElementById('uploadText').style.display = 'none';
+    if(!e.target.files[0]) return; selectedFile = e.target.files[0];
+    const video = document.getElementById('previewVideo'); video.src = URL.createObjectURL(selectedFile); video.style.display = 'block';
+    document.getElementById('uploadIcon').style.display = 'none'; document.getElementById('uploadText').style.display = 'none';
 }
-
 function publishVideo() {
-    if(!selectedFile) return showToast('Tikstatus: Выберите видео для загрузки!');
-    const desc = document.getElementById('videoDesc').value || 'Новое видео!';
+    if(!selectedFile) return showToast('Tikstatus: Выберите видео!');
     const reader = new FileReader();
-    
     reader.onload = function(event) {
-        DB.unshift({
-            id: Date.now().toString(),
-            author: myProfile.username,
-            desc: desc,
-            likes: 0,
-            comments: [],
-            src: event.target.result,
-            reposted: false,
-            likedByMe: false,
-            music: `Оригинальный звук - ${myProfile.name}`
-        });
-        
-        saveData(); 
-        
-        closeUpload();
-        updateProfileStats();
-        switchPage('profile');
+        DB.unshift({ id: Date.now().toString(), author: myProfile.username, desc: document.getElementById('videoDesc').value || 'Новое видео!', likes: 0, comments: [], src: event.target.result, reposted: false, likedByMe: false, music: `Оригинальный звук - ${myProfile.name}` });
+        saveData(); closeUpload(); switchPage('profile');
     };
     reader.readAsDataURL(selectedFile);
 }
