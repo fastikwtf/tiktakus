@@ -211,8 +211,6 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
         
         <div class="profile-tabs">
             <div class="tab active">☰</div>
-            <div class="tab">🔒</div>
-            <div class="tab">🤍</div>
         </div>
         
         <!-- СЕТКА ИЛИ ПУСТОЙ СТЕЙТ -->
@@ -338,20 +336,7 @@ let DB = [
     }
 ];
 
-// Фейковая база пользователей для поиска
-const usersDB = [
-    { username: 'tiktok_russia', name: 'TikTok Россия', photo: 'https://via.placeholder.com/100/fe2c55/fff?text=TT' },
-    { username: 'durov', name: 'Pavel Durov', photo: 'https://via.placeholder.com/100/25f4ee/fff?text=PD' },
-    { username: 'qcold', name: 'Focsio', photo: 'https://via.placeholder.com/100/333/fff?text=F' },
-];
 
-if(!usersDB.find(u => u.username === tgUser.username)) {
-    usersDB.push({
-        username: tgUser.username,
-        name: tgUser.first_name,
-        photo: tgUser.photo_url
-    });
-}
 
 // --- НАВИГАЦИЯ ---
 function switchPage(page) {
