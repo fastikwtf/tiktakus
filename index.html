@@ -17,6 +17,12 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 @keyframes spin { 100% { transform: rotate(360deg); } }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
+/* ВСПЛЫВАЮЩИЕ УВЕДОМЛЕНИЯ TIKSTATUS */
+#toast-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+.tikstatus-toast { background: rgba(0, 0, 0, 0.85); color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 500; text-align: center; backdrop-filter: blur(5px); animation: toastFadeIn 0.2s, toastFadeOut 0.2s 2.8s forwards; }
+@keyframes toastFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes toastFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
+
 .page { display: none; height: 100vh; width: 100vw; position: relative; background: #000; }
 .page.active { display: block; animation: fadeIn 0.3s ease-out; }
 
@@ -175,7 +181,7 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
 <div id="page-chats" class="page">
     <div class="header-title">Входящие</div>
     <div class="chat-list">
-        <div class="chat-item" onclick="alert('Открыт чат')">
+        <div class="chat-item" onclick="showToast('Tikstatus: Открыт чат')">
             <div class="chat-avatar">👤</div>
             <div class="chat-info">
                 <div class="chat-name">Новый подписчик</div>
@@ -253,6 +259,21 @@ textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; bor
 </div>
 
 <script>
+// --- КАСТОМНЫЕ УВЕДОМЛЕНИЯ TIKSTATUS ---
+function showToast(msg) {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = 'tikstatus-toast';
+    toast.innerText = msg;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
 // --- TELEGRAM WEB APP ---
 let tgUser = {
     username: 'user_unknown',
@@ -302,8 +323,8 @@ function saveData() {
         localStorage.setItem('tiktok_DB', JSON.stringify(DB));
         localStorage.setItem('tiktok_usersDB', JSON.stringify(usersDB));
     } catch (e) {
-        console.warn('Ошибка сохранения в localStorage (Возможно, видео слишком большое):', e);
-        alert('Память переполнена! Слишком большое видео. Очистите кэш или загрузите видео меньшего размера.');
+        console.warn('Ошибка сохранения в localStorage:', e);
+        showToast('Tikstatus: Память переполнена! Загрузите видео меньшего размера.');
     }
 }
 
@@ -385,7 +406,7 @@ function renderFeed() {
                     <div class="btn-icon-box">🔁</div>
                     <div class="btn-text">Репост</div>
                 </div>
-                <div class="btn-wrapper" onclick="alert('Данная кнопка не работает')"> <!--- Ссылка скопирована! ---!>
+                <div class="btn-wrapper" onclick="showToast('Tikstatus: Ссылка скопирована')">
                     <div class="btn-icon-box">↗️</div>
                     <div class="btn-text">Поделиться</div>
                 </div>
@@ -431,7 +452,7 @@ function handleSearch(query) {
         container.innerHTML = `<div class="search-empty">Пользователь не найден</div>`;
     } else {
         container.innerHTML = results.map(u => `
-            <div class="user-result" onclick="alert('Переход в профиль @${u.username}')">
+            <div class="user-result" onclick="showToast('Tikstatus: Переход в профиль @${u.username}')">
                 <div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
                 <div class="user-result-info"><div class="user-result-name">${u.name}</div><div class="user-result-username">@${u.username}</div></div>
             </div>
@@ -464,15 +485,15 @@ function toggleLike(el, id) {
     
     count.innerText = formatNumber(v.likes);
     updateProfileStats();
-    saveData(); // СОХРАНЯЕМ!
+    saveData(); 
 }
 
 function doRepost(id) {
     const v = DB.find(x => x.id === id);
-    if(v.reposted) return alert('Вы уже репостнули это видео');
+    if(v.reposted) return showToast('Tikstatus: Вы уже репостнули это видео');
     v.reposted = true;
     renderFeed();
-    saveData(); // СОХРАНЯЕМ!
+    saveData(); 
 }
 
 // --- КОММЕНТАРИИ ---
@@ -514,7 +535,7 @@ function addComment() {
     const list = document.getElementById('commentsList');
     list.scrollTop = list.scrollHeight;
     
-    saveData(); // СОХРАНЯЕМ!
+    saveData();
 }
 
 // --- ЗАГРУЗКА ВИДЕО ---
@@ -542,7 +563,7 @@ function previewFile(e) {
 }
 
 function publishVideo() {
-    if(!selectedFile) return alert('Выберите видео для загрузки!');
+    if(!selectedFile) return showToast('Tikstatus: Выберите видео для загрузки!');
     const desc = document.getElementById('videoDesc').value || 'Новое видео!';
     const reader = new FileReader();
     
@@ -559,7 +580,7 @@ function publishVideo() {
             music: `Оригинальный звук - ${tgUser.first_name}`
         });
         
-        saveData(); // СОХРАНЯЕМ!
+        saveData(); 
         
         closeUpload();
         updateProfileStats();
