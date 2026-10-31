@@ -595,6 +595,21 @@ function mergeUserIntoList(list, userObj, fromBotSync = false) {
     }
 }
 
+try {
+    const res = await fetch(`${BACKEND_URL}/api/feed`);
+    if (res.ok) {
+        const serverData = await res.json();
+        if (serverData.videos && serverData.videos.length > 0) {
+            DB = serverData.videos;
+        }
+        if (serverData.users) {
+            serverData.users.forEach(u => mergeUserIntoList(usersDB, u));
+        }
+    }
+} catch (e) {
+    console.log("Сервер недоступен, открываем из локального кэша");
+}
+    
 async function loadAllData() {
     await initIndexedDB();
 
@@ -1572,40 +1587,47 @@ function previewFile(e) {
     document.getElementById('uploadText').style.display = 'none';
 }
 
-function publishVideo() {
+// Адрес твоего запущенного FastAPI сервера
+const BACKEND_URL = "http://c13.play2go.cloud:8000"; 
+
+async function publishVideo() {
     if (!selectedFile) return showToast('Выберите видеофайл!');
+    
     const btn = document.getElementById('publishBtn');
-    btn.innerText = 'Сохранение видео...';
+    btn.innerText = 'Загрузка на сервер...';
     btn.disabled = true;
 
-    const r = new FileReader();
-    r.onload = ev => {
-        const newVidId = 'vid_' + Date.now();
-        DB.unshift({
-            id: newVidId,
-            author: myProfile.username,
-            desc: document.getElementById('videoDesc').value.trim() || 'Новое видео в #Tikstatus 🔥',
-            music: document.getElementById('videoMusic').value.trim() || `Оригинальный звук — ${myProfile.name}`,
-            likes: 0,
-            likedBy: [],
-            repostedBy: [],
-            bookmarkedBy: [],
-            views: 1,
-            pinned: false,
-            comments: [],
-            src: ev.target.result
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('author', myProfile.username);
+    formData.append('desc', document.getElementById('videoDesc').value.trim() || 'Новое видео #Tikstatus');
+    formData.append('music', document.getElementById('videoMusic').value.trim() || `Оригинальный звук — ${myProfile.name}`);
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/upload`, {
+            method: 'POST',
+            body: formData
         });
 
-        globalMuted = false;
+        if (!res.ok) throw new Error('Ошибка сервера');
+        const data = await res.json();
+
+        // Добавляем созданное видео в локальную ленту
+        DB.unshift(data.video);
         saveData();
+
         btn.innerText = 'Опубликовать в Tikstatus';
         btn.disabled = false;
         closeUpload();
         switchPage('home');
-        renderFeed(newVidId);
-        showToast('Видео опубликовано со звуком! 🎬');
-    };
-    r.readAsDataURL(selectedFile);
+        renderFeed(data.video.id);
+        showToast('Видео успешно опубликовано и доступно всем! 🎬');
+    } catch (err) {
+        console.error(err);
+        btn.innerText = 'Опубликовать в Tikstatus';
+        btn.disabled = false;
+        showToast('Ошибка при загрузке видео на сервер!');
+    }
 }
 
 // Старт приложения
