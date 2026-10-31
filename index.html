@@ -32,7 +32,6 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .video-container video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
 .video-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(transparent, rgba(0,0,0,0.8)); pointer-events: none; }
 .text-placeholder { color: #555; font-size: 24px; font-weight: bold; }
-.audio-unmute-overlay { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 15; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); color: #fff; font-weight: bold; font-size: 18px; text-shadow: 1px 1px 5px #000; }
 
 /* НАВИГАЦИЯ И ИНФО ВИДЕО */
 .top-nav { position: absolute; top: 50px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 20; }
@@ -323,6 +322,21 @@ function showToast(msg) {
     container.appendChild(t); setTimeout(() => t.remove(), 3000);
 }
 
+// ГЛОБАЛЬНЫЙ МЬЮТ (КАК В РЕАЛЬНОМ TIKTOK)
+let globalMuted = true;
+
+// Невидимая функция разблокировки звука
+function unlockAudio() {
+    if (!globalMuted) return;
+    globalMuted = false;
+    document.querySelectorAll('.feed-video').forEach(v => {
+        v.muted = false;
+    });
+}
+// Любой первый тап по экрану включит звук во всем приложении
+document.body.addEventListener('click', unlockAudio, { once: true });
+document.body.addEventListener('touchstart', unlockAudio, { once: true });
+
 // --- ТГ WEB APP И ПРОФИЛЬ ---
 let tgUser = { username: 'user' + Math.floor(Math.random()*1000), first_name: 'Пользователь', photo_url: '' };
 if (window.Telegram && window.Telegram.WebApp) {
@@ -458,18 +472,16 @@ function sendChatMessage() {
 // --- ЛЕНТА И АВТОВОСПРОИЗВЕДЕНИЕ ---
 function renderFeed() {
     const feed = document.getElementById('videoFeed'); feed.innerHTML = '';
-    let firstVideoOverlay = `<div class="audio-unmute-overlay" id="unmute-overlay" onclick="unmuteAllAndPlay()">🔊 Нажмите, чтобы включить звук</div>`;
-    let isFirst = true;
 
     DB.forEach(v => {
         const div = document.createElement('div'); div.className = 'video-container';
-        let media = v.src ? `<video data-id="${v.id}" src="${v.src}" loop playsinline class="feed-video" onclick="toggleVideoPause(this)"></video>` : `<div class="text-placeholder">📹 Видео</div>`;
+        
+        // ДОБАВЛЕНЫ: autoplay muted playsinline прямо в тег
+        let media = v.src ? `<video data-id="${v.id}" src="${v.src}" loop playsinline autoplay muted class="feed-video" onclick="toggleVideoPause(this)"></video>` : `<div class="text-placeholder">📹 Видео</div>`;
         let authorData = usersDB.find(u => u.username === v.author) || {photo:''};
         let isBookmarked = myFavorites.includes(v.id);
-        
-        let overlayHTML = isFirst ? firstVideoOverlay : ''; isFirst = false;
 
-        div.innerHTML = `${media}<div class="video-overlay"></div>${overlayHTML}
+        div.innerHTML = `${media}<div class="video-overlay"></div>
             <div class="top-nav"><span class="active">Рекомендации</span></div>
             <div class="video-info">${v.reposted ? `<div class="repost-badge">🔁 Репост</div>` : ''}
                 <h3 onclick="openOtherProfile('${v.author}')">@${v.author}</h3><p>${v.desc}</p>
@@ -487,12 +499,6 @@ function renderFeed() {
     observeVideos();
 }
 
-function unmuteAllAndPlay() {
-    document.getElementById('unmute-overlay').style.display = 'none';
-    document.querySelectorAll('.feed-video').forEach(vid => { vid.muted = false; });
-    document.querySelectorAll('.feed-video').forEach(vid => { let rect = vid.getBoundingClientRect(); if(rect.top >= 0 && rect.bottom <= window.innerHeight + 100) { vid.play(); } });
-}
-
 function toggleVideoPause(vid) { vid.paused ? vid.play() : vid.pause(); }
 
 function observeVideos() {
@@ -500,10 +506,28 @@ function observeVideos() {
         entries.forEach(entry => {
             const vid = entry.target;
             if (entry.isIntersecting) {
-                vid.play().catch(e => { vid.muted = true; vid.play(); }); 
+                // Применяем глобальный мьют
+                vid.muted = globalMuted;
+                
+                let playPromise = vid.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => {
+                        vid.muted = true; // Если браузер все еще блочит, играем без звука
+                        vid.play();
+                    });
+                }
+                
+                // Фикс накрутки просмотров (засчитываем 1 раз за сессию ленты)
                 const v = DB.find(x => x.id === vid.getAttribute('data-id'));
-                if(v) { v.views = (v.views || 0) + 1; saveData(); }
-            } else { vid.pause(); vid.currentTime = 0; }
+                if(v && !vid.dataset.viewed) { 
+                    v.views = (v.views || 0) + 1; 
+                    vid.dataset.viewed = "true";
+                    saveData(); 
+                }
+            } else { 
+                vid.pause(); 
+                vid.currentTime = 0; 
+            }
         });
     }, { threshold: 0.6 });
     document.querySelectorAll('.feed-video').forEach(v => observer.observe(v));
