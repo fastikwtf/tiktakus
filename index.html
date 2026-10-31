@@ -3,623 +3,1382 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Tikstatus - TikTok Clone</title>
+<title>Tikstatus</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; position: fixed; }
 
-/* АНИМАЦИИ И УВЕДОМЛЕНИЯ */
+/* АНИМАЦИИ */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+@keyframes heartPop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
 @keyframes spin { 100% { transform: rotate(360deg); } }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes floatHeart {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); opacity: 1; }
+    100% { transform: translate(-50%, -180%) scale(1.5) rotate(0deg); opacity: 0; }
+}
 
-#toast-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-.tikstatus-toast { background: rgba(0, 0, 0, 0.85); color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 15px; font-weight: 500; text-align: center; backdrop-filter: blur(5px); animation: toastFadeIn 0.2s, toastFadeOut 0.2s 2.8s forwards; }
-@keyframes toastFadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-@keyframes toastFadeOut { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
+/* ТОСТ-УВЕДОМЛЕНИЯ */
+#toast-container { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; width: 85%; max-width: 340px; }
+.tikstatus-toast { background: rgba(25, 25, 25, 0.92); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.2s ease; }
 
-.page { display: none; height: 100vh; width: 100vw; position: relative; background: #000; }
-.page.active { display: block; animation: fadeIn 0.3s ease-out; }
+/* СТРАНИЦЫ */
+.page { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; background: #000; z-index: 1; }
+.page.active { display: block; animation: fadeIn 0.2s ease-out; }
 
-/* ЛЕНТА И ВИДЕО */
+/* ЛЕНТА ВИДЕО */
 .feed { height: 100vh; width: 100vw; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
 .feed::-webkit-scrollbar { display: none; }
-.video-container { height: 100vh; width: 100vw; position: relative; scroll-snap-align: start; background: #111; display: flex; justify-content: center; align-items: center; }
-.video-container video { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-.video-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 40%; background: linear-gradient(transparent, rgba(0,0,0,0.8)); pointer-events: none; }
-.text-placeholder { color: #555; font-size: 24px; font-weight: bold; }
+.video-container { height: 100vh; width: 100vw; position: relative; scroll-snap-align: start; scroll-snap-stop: always; background: #0e0e0e; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.video-container video { width: 100%; height: 100%; object-fit: cover; }
+.video-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 48%; background: linear-gradient(transparent, rgba(0,0,0,0.85)); pointer-events: none; z-index: 2; }
 
-/* НАВИГАЦИЯ И ИНФО ВИДЕО */
-.top-nav { position: absolute; top: 50px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index: 20; }
-.top-nav span { font-size: 17px; color: rgba(255,255,255,0.6); font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5); cursor: pointer; transition: color 0.2s; position: relative; }
-.top-nav span.active { color: #fff; }
-.top-nav span.active::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 25px; height: 3px; background: #fff; border-radius: 2px; }
+/* ЦЕНТРАЛЬНАЯ ИКОНКА ПАУЗЫ И ДВОЙНОЙ ТАП */
+.play-indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.15s, transform 0.15s; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+.play-indicator.paused { opacity: 0.75; transform: translate(-50%, -50%) scale(1.1); }
+.double-tap-heart { position: absolute; pointer-events: none; z-index: 30; color: #fe2c55; font-size: 90px; filter: drop-shadow(0 4px 12px rgba(254,44,85,0.4)); animation: floatHeart 0.85s ease-out forwards; }
 
-.video-info { position: absolute; bottom: 80px; left: 15px; width: 75%; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-.video-info h3 { font-size: 17px; margin-bottom: 8px; font-weight: 600; cursor: pointer; }
-.video-info p { font-size: 15px; line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.music-info { display: flex; align-items: center; gap: 8px; font-size: 14px; }
-.music-ticker { overflow: hidden; white-space: nowrap; width: 150px; display: inline-block; }
-.repost-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; margin-bottom: 10px; backdrop-filter: blur(5px); }
+/* ВЕРХНЯЯ ШАПКА ЛЕНТЫ */
+.top-bar { position: fixed; top: 0; left: 0; width: 100%; padding: 42px 16px 12px; display: flex; justify-content: space-between; align-items: center; z-index: 25; pointer-events: none; }
+.top-bar > * { pointer-events: auto; }
+.sound-pill { background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(6px); color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.top-nav-tabs { display: flex; gap: 18px; align-items: center; }
+.top-nav-tabs span { font-size: 17px; color: rgba(255,255,255,0.65); font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.6); cursor: pointer; position: relative; }
+.top-nav-tabs span.active { color: #fff; }
+.top-nav-tabs span.active::after { content: ''; position: absolute; bottom: -7px; left: 50%; transform: translateX(-50%); width: 28px; height: 3px; background: #fff; border-radius: 2px; }
+.top-search-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6)); }
 
-/* КНОПКИ СПРАВА */
-.side-buttons { position: absolute; right: 10px; bottom: 80px; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; }
-.btn-wrapper { display: flex; flex-direction: column; align-items: center; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); }
-.btn-icon-box { font-size: 32px; transition: transform 0.1s; }
-.btn-wrapper:active .btn-icon-box { transform: scale(0.9); }
-.btn-text { font-size: 13px; margin-top: 5px; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-.liked { color: #fe2c55; animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.music-disc { width: 45px; height: 45px; background: #222; border-radius: 50%; border: 7px solid #1a1a1a; display: flex; justify-content: center; align-items: center; margin-top: 10px; animation: spin 4s linear infinite; cursor: pointer;}
-.music-disc img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+/* ИНФОРМАЦИЯ О ВИДЕО СЛЕВА ВНИЗУ */
+.video-info { position: absolute; bottom: 72px; left: 14px; width: 74%; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; }
+.video-info > * { pointer-events: auto; }
+.repost-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 8px; backdrop-filter: blur(4px); }
+.video-author { font-size: 17px; font-weight: 700; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+.verified-badge { color: #20d5ec; font-size: 14px; }
+.video-desc { font-size: 14px; line-height: 1.4; margin-bottom: 8px; word-wrap: break-word; }
+.music-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; overflow: hidden; white-space: nowrap; }
+.music-marquee { display: inline-block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
 
-/* НИЖНЕЕ МЕНЮ */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 60px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 50; border-top: 0.5px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
-.feed-active .bottom-nav { background: transparent; border-top: none; }
-.nav-item { font-size: 10px; color: #888; display: flex; flex-direction: column; align-items: center; cursor: pointer; gap: 4px; transition: color 0.2s; }
+/* ПРАВАЯ ПАНЕЛЬ КНОПОК (100% TIKTOK) */
+.side-buttons { position: absolute; right: 8px; bottom: 72px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 10; width: 54px; }
+.author-avatar-wrap { position: relative; width: 48px; height: 48px; margin-bottom: 8px; cursor: pointer; }
+.author-avatar-wrap img, .author-avatar-wrap .avatar-fallback { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; background: #333; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.follow-plus-badge { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%; background: #fe2c55; color: #fff; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; cursor: pointer; transition: transform 0.2s; }
+.follow-plus-badge.followed { background: #fff; color: #fe2c55; font-size: 12px; }
+
+.btn-wrapper { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+.btn-icon-svg { width: 34px; height: 34px; fill: #fff; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45)); transition: transform 0.15s, fill 0.15s; }
+.btn-wrapper:active .btn-icon-svg { transform: scale(0.85); }
+.btn-icon-svg.liked { fill: #fe2c55; animation: heartPop 0.35s ease; }
+.btn-icon-svg.bookmarked { fill: #face15; animation: heartPop 0.35s ease; }
+.btn-text { font-size: 12px; margin-top: 3px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
+
+.music-disc { width: 46px; height: 46px; background: radial-gradient(circle, #333 30%, #111 70%); border-radius: 50%; border: 8px solid #222; display: flex; justify-content: center; align-items: center; margin-top: 4px; animation: spin 5s linear infinite; cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
+.music-disc img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+
+/* ПОЛЗУНОК ВРЕМЕНИ ВИДЕО */
+.video-progress-wrap { position: absolute; bottom: 56px; left: 0; width: 100%; height: 12px; display: flex; align-items: flex-end; z-index: 20; cursor: pointer; }
+.video-progress-bg { width: 100%; height: 2.5px; background: rgba(255,255,255,0.25); transition: height 0.15s; }
+.video-progress-wrap:active .video-progress-bg { height: 6px; }
+.video-progress-fill { height: 100%; width: 0%; background: #fff; position: relative; }
+
+/* НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ */
+.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 56px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 50; border-top: 0.5px solid rgba(255,255,255,0.15); }
+.nav-item { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 3px; width: 20%; position: relative; }
 .nav-item.active { color: #fff; }
-.nav-icon { font-size: 22px; }
-.plus-btn { background: linear-gradient(to right, #25f4ee 0%, #25f4ee 50%, #fe2c55 50%, #fe2c55 100%); border-radius: 10px; padding: 2px 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-.plus-btn-inner { background: #fff; color: #000; border-radius: 8px; width: 38px; height: 26px; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; }
+.nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+.unread-dot { position: absolute; top: 2px; right: 24%; width: 8px; height: 8px; background: #fe2c55; border-radius: 50%; display: none; }
+.plus-btn { width: 44px; height: 30px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.plus-btn::before { content: ''; position: absolute; left: 0; width: 38px; height: 100%; background: #25f4ee; border-radius: 8px; }
+.plus-btn::after { content: ''; position: absolute; right: 0; width: 38px; height: 100%; background: #fe2c55; border-radius: 8px; }
+.plus-btn-inner { position: relative; z-index: 2; width: 36px; height: 100%; background: #fff; color: #000; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; }
 
-/* ПРОФИЛЬ */
+/* ПРОФИЛЬ (МОЙ И ЧУЖОЙ) */
 #page-profile, #page-other-profile { background: #fff; color: #000; }
-.profile-scroll-wrap { height: calc(100vh - 60px); overflow-y: auto; padding-top: 50px; }
-.profile-header-title { position: absolute; top: 0; left: 0; width: 100%; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; font-weight: 600; font-size: 17px; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); z-index: 10; border-bottom: 1px solid #f1f1f2; }
-.profile-header-title .back-btn { font-size: 22px; cursor: pointer; width: 30px; }
-.profile-header-title .empty-space { width: 30px; }
-.profile-header { padding: 20px; text-align: center; }
-.avatar { width: 96px; height: 96px; border-radius: 50%; background: #f0f0f0; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; border: 1px solid #ddd; }
-.avatar img { width: 100%; height: 100%; object-fit: cover; }
-.profile-name { font-size: 20px; font-weight: 700; margin-bottom: 5px; }
-.profile-username { font-size: 15px; color: #666; margin-bottom: 10px; }
-.profile-bio { font-size: 14px; color: #000; margin-bottom: 20px; padding: 0 20px; line-height: 1.4; white-space: pre-wrap; }
-.stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 20px; }
-.stats-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: #666; }
-.stats-item b { font-size: 18px; color: #000; font-weight: 700; margin-bottom: 2px; }
-.profile-actions { display: flex; justify-content: center; gap: 10px; }
-.edit-profile-btn { padding: 10px 20px; border: 1px solid #e3e3e4; border-radius: 4px; font-weight: 600; font-size: 15px; background: transparent; cursor: pointer; }
-.btn-primary { background: #fe2c55; color: #fff; border: none; }
+.profile-top-bar { height: 52px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 17px; border-bottom: 1px solid #f1f1f2; background: #fff; position: sticky; top: 0; z-index: 15; }
+.profile-scroll-wrap { height: calc(100vh - 108px); overflow-y: auto; }
+.profile-header { padding: 20px 16px 16px; text-align: center; }
+.avatar-large { width: 96px; height: 96px; border-radius: 50%; background: #f1f1f2; margin: 0 auto 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; border: 1px solid #e5e5e5; position: relative; }
+.avatar-large img { width: 100%; height: 100%; object-fit: cover; }
+.profile-name { font-size: 19px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.profile-username { font-size: 14px; color: #666; margin-bottom: 14px; font-weight: 500; }
+.stats { display: flex; justify-content: center; gap: 36px; margin-bottom: 16px; }
+.stats-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: #777; cursor: pointer; }
+.stats-item b { font-size: 17px; color: #111; font-weight: 800; margin-bottom: 2px; }
+.profile-actions { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+.profile-btn { padding: 10px 22px; border: 1px solid #e3e3e4; border-radius: 6px; font-weight: 600; font-size: 15px; background: #f8f8f8; color: #000; cursor: pointer; }
+.profile-btn.primary { background: #fe2c55; color: #fff; border-color: #fe2c55; }
+.profile-btn.following { background: #f1f1f2; color: #333; }
+.profile-bio { font-size: 14px; color: #222; padding: 0 24px; line-height: 1.4; white-space: pre-wrap; }
 
-/* СЕТКА ВИДЕО И ТАБЫ ПРОФИЛЯ */
-.profile-tabs { display: flex; border-top: 1px solid #f1f1f2; border-bottom: 1px solid #f1f1f2; }
-.profile-tabs .tab { flex: 1; text-align: center; padding: 12px 0; color: #888; font-size: 20px; cursor: pointer; position: relative; }
+.profile-tabs { display: flex; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; background: #fff; position: sticky; top: 0; z-index: 10; }
+.profile-tabs .tab { flex: 1; text-align: center; padding: 11px 0; color: #888; font-size: 18px; cursor: pointer; position: relative; }
 .profile-tabs .tab.active { color: #000; }
-.profile-tabs .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 40%; height: 2px; background: #000; }
-.profile-video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #fff; min-height: 300px; padding-bottom: 20px; }
-.grid-item { aspect-ratio: 9/16; background: #333; position: relative; cursor: pointer; }
-.grid-item video { width: 100%; height: 100%; object-fit: cover; }
-.grid-item .views { position: absolute; bottom: 5px; left: 5px; color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+.profile-tabs .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 42px; height: 2.5px; background: #000; }
+.profile-video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: #fff; min-height: 260px; padding-bottom: 30px; }
+.grid-item { aspect-ratio: 3/4; background: #1a1a1a; position: relative; cursor: pointer; overflow: hidden; }
+.grid-item video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.grid-item .views { position: absolute; bottom: 6px; left: 6px; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
+.grid-item .pinned-tag { position: absolute; top: 5px; left: 5px; background: #fe2c55; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 3px; }
 
-/* ПУСТОЙ СТЕЙТ */
-.empty-state { grid-column: span 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; }
-.empty-icon { font-size: 50px; color: #ccc; margin-bottom: 15px; }
-.empty-title { font-weight: 700; font-size: 17px; margin-bottom: 8px; color: #000; }
+.empty-state { grid-column: span 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 55px 20px; text-align: center; }
+.empty-icon { font-size: 44px; color: #ccc; margin-bottom: 12px; }
+.empty-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: #111; }
+.empty-desc { font-size: 13px; color: #777; }
 
-/* РЕДАКТИРОВАНИЕ ПРОФИЛЯ */
-#page-edit-profile { background: #fff; color: #000; }
-.edit-profile-header { padding: 50px 15px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; font-weight: 600; font-size: 16px; }
-.edit-form-wrap { padding: 30px 20px; display: flex; flex-direction: column; align-items: center; }
-.edit-avatar-box { width: 100px; height: 100px; border-radius: 50%; background: #f0f0f0; border: 1px solid #ddd; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; position: relative; cursor: pointer; }
-.edit-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-.edit-avatar-box .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 24px; }
-.edit-field { width: 100%; margin-bottom: 20px; }
-.edit-field label { display: block; font-size: 13px; color: #666; margin-bottom: 8px; font-weight: 500; }
-.edit-field input, .edit-field textarea { width: 100%; background: #f1f1f2; border: none; border-radius: 8px; padding: 14px; color: #000; font-size: 15px; outline: none; }
-.edit-field textarea { height: 100px; resize: none; }
-
-/* ПОИСК И ЧАТЫ */
-#page-search { background: #111; }
-.search-header { display: flex; align-items: center; padding: 50px 15px 15px; gap: 10px; border-bottom: 1px solid #222; }
+/* ПОИСК И РЕКОМЕНДАЦИИ ЮЗЕРОВ */
+#page-search { background: #0e0e0e; }
+.search-header { display: flex; align-items: center; padding: 14px 15px; gap: 10px; border-bottom: 1px solid #222; }
 .search-input-box { flex: 1; display: flex; align-items: center; background: #222; border-radius: 8px; padding: 0 12px; }
-.search-input-box input { flex: 1; padding: 10px; background: transparent; border: none; color: #fff; font-size: 15px; outline: none; }
-.search-results { padding: 10px 15px; overflow-y: auto; height: calc(100vh - 120px); }
-.user-result { display: flex; align-items: center; gap: 12px; padding: 12px 0; cursor: pointer; }
-.user-result-avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; justify-content: center; align-items: center; font-size: 20px; overflow: hidden; }
+.search-input-box input { flex: 1; padding: 10px 8px; background: transparent; border: none; color: #fff; font-size: 15px; outline: none; }
+.search-results { padding: 8px 15px 70px; overflow-y: auto; height: calc(100vh - 65px); }
+.user-result { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
+.user-result-avatar { width: 52px; height: 52px; border-radius: 50%; background: #333; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; }
 .user-result-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-result-info { flex: 1; }
-.user-result-name { font-weight: 600; font-size: 15px; color: #fff; margin-bottom: 3px; }
+.user-result-name { font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
 .user-result-username { font-size: 13px; color: #888; }
-.search-empty { color: #666; text-align: center; margin-top: 50px; font-size: 14px; }
 
-.header-title { padding: 50px 15px 15px; text-align: center; font-size: 18px; font-weight: 600; border-bottom: 1px solid #222; }
-.chat-list { overflow-y: auto; height: calc(100vh - 120px); }
-.chat-item { display: flex; align-items: center; padding: 15px; cursor: pointer; border-bottom: 1px solid #222; }
-.chat-avatar { width: 56px; height: 56px; border-radius: 50%; background: #333; margin-right: 15px; display: flex; justify-content: center; align-items: center; font-size: 24px; overflow: hidden; }
+/* ВХОДЯЩИЕ И ЧАТ */
+.header-title { height: 52px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; border-bottom: 1px solid #222; }
+.chat-list { overflow-y: auto; height: calc(100vh - 108px); }
+.chat-item { display: flex; align-items: center; padding: 14px 16px; cursor: pointer; border-bottom: 1px solid #181818; }
+.chat-avatar { width: 54px; height: 54px; border-radius: 50%; background: #2a2a2a; margin-right: 14px; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; }
 .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.chat-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.chat-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-.chat-msg { color: #888; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+.chat-info { flex: 1; overflow: hidden; }
+.chat-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.chat-msg { color: #888; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* ОКНО ЧАТА */
-#page-chat-room { background: #fff; color: #000; }
-.chat-room-header { display: flex; align-items: center; justify-content: space-between; padding: 45px 15px 15px; border-bottom: 1px solid #eee; font-weight: 600; font-size: 17px; background: rgba(255,255,255,0.95); z-index: 10; position: absolute; top: 0; width: 100%; }
-.chat-messages { height: calc(100vh - 65px); padding: 75px 15px 80px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #f8f8f8; }
-.chat-bubble { max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.4; word-wrap: break-word; }
+#page-chat-room { background: #fff; color: #000; z-index: 60; }
+.chat-room-header { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #eee; font-weight: 700; font-size: 16px; background: #fff; }
+.chat-messages { height: calc(100vh - 114px); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f6f6f6; }
+.chat-bubble { max-width: 78%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
 .chat-bubble.sent { align-self: flex-end; background: #fe2c55; color: #fff; border-bottom-right-radius: 4px; }
-.chat-bubble.received { align-self: flex-start; background: #e4e4e5; color: #000; border-bottom-left-radius: 4px; }
-.chat-input-area { position: absolute; bottom: 0; width: 100%; padding: 12px 15px; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
-.chat-input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 12px 20px; font-size: 15px; outline: none; }
-.chat-input-area button { background: transparent; color: #fe2c55; border: none; font-weight: 700; font-size: 24px; cursor: pointer; }
+.chat-bubble.received { align-self: flex-start; background: #e8e8e9; color: #000; border-bottom-left-radius: 4px; }
+.shared-video-card { background: #111; color: #fff; padding: 10px; border-radius: 12px; margin-top: 5px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
+.chat-input-area { height: 60px; padding: 0 12px; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+.chat-input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 11px 16px; font-size: 14px; outline: none; }
+.chat-input-area button { background: #fe2c55; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; font-weight: 700; font-size: 16px; cursor: pointer; }
 
-/* МОДАЛКИ (КОММЕНТЫ, ШЕЙР, СТУДИЯ ЗАГРУЗКИ) */
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99; }
+/* МОДАЛКА КОММЕНТАРИЕВ И РЕПОСТОВ */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.55); z-index: 90; }
 .modal-overlay.active { display: block; }
-.modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 65vh; background: #fff; color: #000; z-index: 100; transition: bottom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 12px 12px 0 0; display: flex; flex-direction: column; }
+.modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 68vh; background: #fff; color: #000; z-index: 100; transition: bottom 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 14px 14px 0 0; display: flex; flex-direction: column; }
 .modal.open { bottom: 0; }
-.modal-header { padding: 15px; text-align: center; font-weight: 700; font-size: 16px; position: relative; border-bottom: 1px solid #eee; }
-.close-btn { position: absolute; right: 15px; top: 15px; font-size: 20px; cursor: pointer; color: #000; }
-.comments-list { flex: 1; overflow-y: auto; padding: 15px; }
-.comment { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-.comment-left { display: flex; gap: 12px; }
-.comment-avatar { width: 36px; height: 36px; border-radius: 50%; background: #eee; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; }
+.modal-header { padding: 14px; text-align: center; font-weight: 700; font-size: 15px; position: relative; border-bottom: 1px solid #eee; }
+.close-btn { position: absolute; right: 15px; top: 12px; font-size: 20px; cursor: pointer; color: #444; }
+.comments-list { flex: 1; overflow-y: auto; padding: 14px; }
+.comment-item { margin-bottom: 16px; }
+.comment-main { display: flex; justify-content: space-between; align-items: flex-start; }
+.comment-left { display: flex; gap: 10px; flex: 1; padding-right: 10px; }
+.comment-avatar { width: 34px; height: 34px; border-radius: 50%; background: #eee; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; flex-shrink: 0; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.comment-user { font-size: 13px; color: #666; font-weight: 600; margin-bottom: 4px; cursor: pointer; }
-.comment-text { font-size: 15px; color: #000; }
-.comment-like { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 12px; cursor: pointer; }
+.comment-user { font-size: 12px; color: #666; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.pinned-badge { background: #f1f1f2; color: #555; font-size: 10px; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+.author-tag { color: #fe2c55; font-weight: 700; font-size: 11px; }
+.comment-text { font-size: 14px; color: #111; line-height: 1.35; margin-bottom: 5px; }
+.comment-actions { display: flex; gap: 14px; font-size: 12px; color: #888; font-weight: 600; }
+.comment-actions span { cursor: pointer; }
+.comment-like { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 12px; cursor: pointer; min-width: 28px; }
 .comment-like.active { color: #fe2c55; }
-.input-area { padding: 12px 15px 25px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; align-items: center; }
-.input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 12px 20px; font-size: 15px; outline: none; }
-.input-area button { background: transparent; color: #fe2c55; border: none; font-weight: 700; font-size: 24px; cursor: pointer; padding-right: 5px; }
+.replies-wrap { margin-left: 44px; margin-top: 8px; border-left: 2px solid #eee; padding-left: 10px; }
+.reply-bar { display: none; background: #f8f8f8; padding: 6px 14px; font-size: 12px; color: #555; justify-content: space-between; align-items: center; border-top: 1px solid #eee; }
+.reply-bar.active { display: flex; }
+.input-area { padding: 10px 14px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; align-items: center; }
+.input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 10px 16px; font-size: 14px; outline: none; }
+.input-area button { background: #fe2c55; color: #fff; border: none; border-radius: 50%; width: 34px; height: 34px; font-weight: 700; font-size: 16px; cursor: pointer; }
 
-#shareModal { height: 45vh; }
-.share-list { display: flex; overflow-x: auto; gap: 15px; padding: 20px 15px; }
-.share-user-item { display: flex; flex-direction: column; align-items: center; min-width: 60px; cursor: pointer; }
-.share-user-item .avatar { width: 56px; height: 56px; margin-bottom: 8px; border: none; }
-.share-user-name { font-size: 12px; color: #333; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60px; }
+/* ШЕЙР МОДАЛКА */
+#shareModal { height: auto; padding-bottom: 24px; }
+.share-list { display: flex; overflow-x: auto; gap: 16px; padding: 16px; border-bottom: 1px solid #f1f1f2; }
+.share-actions-row { display: flex; overflow-x: auto; gap: 18px; padding: 16px; }
+.share-item { display: flex; flex-direction: column; align-items: center; min-width: 62px; cursor: pointer; gap: 6px; }
+.share-circle { width: 52px; height: 52px; border-radius: 50%; background: #f1f1f2; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; }
+.share-circle img { width: 100%; height: 100%; object-fit: cover; }
+.share-label { font-size: 11px; color: #333; text-align: center; font-weight: 500; max-width: 66px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-#upload-page { display: none; flex-direction: column; height: 100vh; background: #000; position: absolute; top: 0; left: 0; width: 100%; z-index: 100; }
-#upload-page.active { display: flex; animation: slideUp 0.3s ease; }
-.upload-header { padding: 40px 15px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-.upload-body { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-.upload-box { width: 100%; aspect-ratio: 9/16; max-height: 50vh; background: #1a1a1a; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; }
-.upload-box video { width: 100%; height: 100%; object-fit: cover; display: none; }
-textarea { width: 100%; margin-top: 20px; background: #1a1a1a; border: none; border-radius: 8px; padding: 15px; color: #fff; font-size: 15px; height: 100px; resize: none; outline: none; }
-.publish-btn { width: 100%; margin-top: auto; margin-bottom: 20px; padding: 16px; background: #fe2c55; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+/* РЕДАКТИРОВАНИЕ И СТУДИЯ ЗАГРУЗКИ */
+#page-edit-profile { background: #fff; color: #000; z-index: 60; }
+.edit-form-wrap { padding: 24px 18px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; height: calc(100vh - 54px); }
+.edit-avatar-box { width: 96px; height: 96px; border-radius: 50%; background: #f0f0f0; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; font-size: 38px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid #ddd; }
+.edit-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+.edit-avatar-box .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px; }
+.edit-field { width: 100%; margin-bottom: 16px; }
+.edit-field label { display: block; font-size: 12px; color: #666; margin-bottom: 6px; font-weight: 600; }
+.edit-field input, .edit-field textarea { width: 100%; background: #f1f1f2; border: none; border-radius: 8px; padding: 12px 14px; color: #000; font-size: 14px; outline: none; }
+
+#upload-page { display: none; flex-direction: column; height: 100vh; background: #0e0e0e; position: fixed; inset: 0; z-index: 120; }
+#upload-page.active { display: flex; animation: slideUp 0.25s ease; }
+.upload-header { height: 54px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+.upload-body { flex: 1; display: flex; flex-direction: column; padding: 16px; overflow-y: auto; }
+.upload-box { width: 100%; height: 42vh; background: #1a1a1a; border: 1.5px dashed #333; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; }
+.upload-box video { width: 100%; height: 100%; object-fit: contain; display: none; background: #000; }
+.upload-input { width: 100%; margin-top: 14px; background: #1a1a1a; border: none; border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
+.publish-btn { width: 100%; margin-top: auto; padding: 15px; background: #fe2c55; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
 </style>
 </head>
-<body class="feed-active">
+<body>
 
-<div id="page-home" class="page active"><div class="feed" id="videoFeed"></div></div>
+<!-- ГЛАВНАЯ ЛЕНТА -->
+<div id="page-home" class="page active">
+    <div class="top-bar">
+        <div class="sound-pill" id="soundTogglePill" onclick="toggleGlobalSound()">🔇 Включить звук</div>
+        <div class="top-nav-tabs">
+            <span class="active">Рекомендации</span>
+        </div>
+        <div class="top-search-btn" onclick="switchPage('search')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M10.5 3a7.5 7.5 0 015.96 12.04l4.25 4.25a1 1 0 01-1.42 1.42l-4.25-4.25A7.5 7.5 0 1110.5 3zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></svg>
+        </div>
+    </div>
+    <div class="feed" id="videoFeed"></div>
+</div>
 
+<!-- ПОИСК (ИНТЕРЕСНОЕ) -->
 <div id="page-search" class="page">
     <div class="search-header">
         <div class="search-input-box">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="searchInput" placeholder="Поиск пользователей по юзернейму..." oninput="handleSearch(this.value)">
-            <span class="clear-search" onclick="clearSearch()">✕</span>
+            <span>🔍</span>
+            <input type="text" id="searchInput" placeholder="Поиск аккаунтов по @юзу или имени..." oninput="handleSearch(this.value)">
+            <span onclick="clearSearch()" style="color:#888;cursor:pointer;padding:4px;">✕</span>
         </div>
-        <span class="cancel-search-btn" onclick="switchPage('home')">Отмена</span>
+        <span onclick="switchPage('home')" style="color:#fe2c55;font-weight:600;font-size:14px;cursor:pointer;">Назад</span>
     </div>
-    <div class="search-results" id="search-results"><div class="search-empty">Введите имя или @username для поиска</div></div>
+    <div class="search-results" id="search-results"></div>
 </div>
 
+<!-- ВХОДЯЩИЕ (СПИСОК ЧАТОВ) -->
 <div id="page-chats" class="page">
     <div class="header-title">Входящие</div>
     <div class="chat-list" id="chat-list-container"></div>
 </div>
 
+<!-- ОКНО ДИАЛОГА -->
 <div id="page-chat-room" class="page">
     <div class="chat-room-header">
-        <span class="back-btn" onclick="switchPage(lastPage || 'chats')">←</span>
-        <span id="chat-room-name">Имя</span>
-        <span style="width: 24px;"></span>
+        <span onclick="switchPage('chats')" style="cursor:pointer;font-size:22px;">←</span>
+        <span id="chat-room-name" onclick="openOtherProfile(activeChatUser.username)" style="cursor:pointer;">Имя</span>
+        <span style="width:24px;"></span>
     </div>
     <div class="chat-messages" id="chat-messages-container"></div>
     <div class="chat-input-area">
-        <input type="text" id="chatMessageInput" placeholder="Отправить сообщение...">
-        <button onclick="sendChatMessage()">⬆</button>
+        <input type="text" id="chatMessageInput" placeholder="Отправить сообщение..." onkeydown="if(event.key==='Enter')sendChatMessage()">
+        <button onclick="sendChatMessage()">➤</button>
     </div>
 </div>
 
+<!-- МОЙ ПРОФИЛЬ -->
 <div id="page-profile" class="page">
-    <div class="profile-header-title"><span class="empty-space"></span><span id="profile-top-name">Профиль</span><span class="empty-space"></span></div>
+    <div class="profile-top-bar">
+        <span style="width:28px;"></span>
+        <span id="profile-top-name">Профиль</span>
+        <span onclick="openUpload()" style="cursor:pointer;font-size:22px;">＋</span>
+    </div>
     <div class="profile-scroll-wrap">
         <div class="profile-header">
-            <div class="avatar" id="profile-avatar">👤</div>
-            <div class="profile-name" id="profile-name">Имя</div>
+            <div class="avatar-large" id="profile-avatar">👤</div>
+            <div class="profile-name"><span id="profile-name">Имя</span></div>
             <div class="profile-username" id="profile-username">@username</div>
-            <div class="profile-bio" id="profile-bio"></div>
             <div class="stats">
                 <div class="stats-item"><b id="profile-following">0</b>Подписки</div>
                 <div class="stats-item"><b id="profile-followers">0</b>Подписчики</div>
                 <div class="stats-item"><b id="profile-likes">0</b>Лайки</div>
             </div>
             <div class="profile-actions">
-                <button class="edit-profile-btn" onclick="openEditProfile()">Изменить профиль</button>
-                <button class="edit-profile-btn" style="padding: 10px; width: 42px;" onclick="showToast('Tikstatus: Сохранено')">🔖</button>
+                <button class="profile-btn" onclick="openEditProfile()">Изменить профиль</button>
+                <button class="profile-btn" onclick="shareMyProfile()">Поделиться</button>
             </div>
+            <div class="profile-bio" id="profile-bio"></div>
         </div>
         <div class="profile-tabs">
             <div class="tab active" id="tab-my-videos" onclick="switchProfileTab('videos')">☰</div>
+            <div class="tab" id="tab-my-reposts" onclick="switchProfileTab('reposts')">🔁</div>
             <div class="tab" id="tab-my-favorites" onclick="switchProfileTab('favorites')">🔖</div>
         </div>
         <div id="profile-video-grid" class="profile-video-grid"></div>
     </div>
 </div>
 
+<!-- ЧУЖОЙ ПРОФИЛЬ -->
 <div id="page-other-profile" class="page">
-    <div class="profile-header-title">
-        <span class="back-btn" onclick="switchPage(lastPage || 'home')">←</span>
+    <div class="profile-top-bar">
+        <span onclick="switchPage(lastPage || 'home')" style="cursor:pointer;font-size:22px;">←</span>
         <span id="other-profile-top-name">Профиль</span>
-        <span class="empty-space"></span>
+        <span style="width:24px;"></span>
     </div>
     <div class="profile-scroll-wrap">
         <div class="profile-header">
-            <div class="avatar" id="other-profile-avatar">👤</div>
-            <div class="profile-name" id="other-profile-name">Имя</div>
+            <div class="avatar-large" id="other-profile-avatar">👤</div>
+            <div class="profile-name"><span id="other-profile-name">Имя</span></div>
             <div class="profile-username" id="other-profile-username">@username</div>
-            <div class="profile-bio" id="other-profile-bio"></div>
             <div class="stats">
-                <div class="stats-item"><b>12</b>Подписки</div>
+                <div class="stats-item"><b id="other-profile-following">0</b>Подписки</div>
                 <div class="stats-item"><b id="other-profile-followers">0</b>Подписчики</div>
                 <div class="stats-item"><b id="other-profile-likes">0</b>Лайки</div>
             </div>
             <div class="profile-actions">
-                <button class="edit-profile-btn btn-primary" onclick="showToast('Tikstatus: Вы подписались!')">Подписаться</button>
-                <button class="edit-profile-btn" onclick="openChatFromProfile()">Сообщение</button>
+                <button class="profile-btn primary" id="other-follow-btn" onclick="toggleFollowOther()">Подписаться</button>
+                <button class="profile-btn" onclick="openChatFromProfile()">Сообщение</button>
             </div>
+            <div class="profile-bio" id="other-profile-bio"></div>
         </div>
-        <div class="profile-tabs"><div class="tab active">☰</div></div>
+        <div class="profile-tabs">
+            <div class="tab active" id="tab-other-videos" onclick="switchOtherProfileTab('videos')">☰</div>
+            <div class="tab" id="tab-other-reposts" onclick="switchOtherProfileTab('reposts')">🔁</div>
+        </div>
         <div id="other-profile-video-grid" class="profile-video-grid"></div>
     </div>
 </div>
 
+<!-- РЕДАКТИРОВАНИЕ ПРОФИЛЯ -->
 <div id="page-edit-profile" class="page">
-    <div class="edit-profile-header">
-        <span class="back-btn" onclick="switchPage('profile')">←</span>
+    <div class="profile-top-bar">
+        <span onclick="switchPage('profile')" style="cursor:pointer;font-size:22px;">←</span>
         <span>Изменить профиль</span>
-        <span class="save-btn" onclick="saveProfile()">Сохранить</span>
+        <span onclick="saveProfile()" style="color:#fe2c55;cursor:pointer;font-size:15px;">Сохранить</span>
     </div>
     <div class="edit-form-wrap">
         <div class="edit-avatar-box" onclick="document.getElementById('editAvatarInput').click()">
-            <div id="edit-avatar-preview">👤</div><div class="overlay">📷</div>
+            <div id="edit-avatar-preview">👤</div>
+            <div class="overlay">📷</div>
         </div>
         <input type="file" id="editAvatarInput" accept="image/*" style="display:none;" onchange="previewEditAvatar(event)">
-        <div class="edit-field"><label>Имя</label><input type="text" id="edit-name-input"></div>
-        <div class="edit-field"><label>Имя пользователя</label><input type="text" id="edit-username-input"></div>
-        <div class="edit-field"><label>Описание</label><textarea id="edit-bio-input"></textarea></div>
+        <div class="edit-field"><label>Имя (Ник)</label><input type="text" id="edit-name-input"></div>
+        <div class="edit-field"><label>Юзернейм (@)</label><input type="text" id="edit-username-input"></div>
+        <div class="edit-field"><label>Описание (Био)</label><textarea id="edit-bio-input" rows="4"></textarea></div>
     </div>
 </div>
 
-<!-- МОДАЛКИ -->
+<!-- СТУДИЯ ЗАГРУЗКИ ВИДЕО -->
+<div id="upload-page">
+    <div class="upload-header">
+        <span onclick="closeUpload()" style="cursor:pointer;font-size:22px;">✕</span>
+        <span style="font-weight:700;">Публикация видео</span>
+        <span style="width:22px;"></span>
+    </div>
+    <div class="upload-body">
+        <div class="upload-box" onclick="document.getElementById('videoInput').click()">
+            <div id="uploadIcon" style="font-size:42px;margin-bottom:8px;">🎬</div>
+            <div id="uploadText" style="color:#aaa;font-size:14px;">Нажмите, чтобы выбрать видео со звуком</div>
+            <video id="previewVideo" playsinline controls></video>
+        </div>
+        <input type="file" id="videoInput" accept="video/*" style="display:none;" onchange="previewFile(event)">
+        <input type="text" id="videoDesc" class="upload-input" placeholder="Описание видео и #хэштеги...">
+        <input type="text" id="videoMusic" class="upload-input" placeholder="Название звука (по умолчанию: Оригинальный звук)">
+        <button class="publish-btn" id="publishBtn" onclick="publishVideo()">Опубликовать в Tikstatus</button>
+    </div>
+</div>
+
+<!-- МОДАЛКИ: КОММЕНТАРИИ И ПОДЕЛИТЬСЯ -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModals()"></div>
 <div class="modal" id="commentsModal">
     <div class="modal-header"><span id="comment-count-title">0 комментариев</span><span class="close-btn" onclick="closeModals()">✕</span></div>
     <div class="comments-list" id="commentsList"></div>
-    <div class="input-area"><input type="text" id="commentInput" placeholder="Добавьте комментарий..."><button onclick="addComment()">⬆</button></div>
-</div>
-<div class="modal" id="shareModal">
-    <div class="modal-header">Поделиться видео<span class="close-btn" onclick="closeModals()">✕</span></div>
-    <div class="share-list" id="shareList"></div>
-</div>
-
-<div id="upload-page">
-    <div class="upload-header"><span onclick="closeUpload()" style="cursor:pointer; font-size:24px;">✕</span><h3 style="font-size:16px;">Новое видео</h3><span style="color:transparent; font-size:24px;">✕</span></div>
-    <div class="upload-body">
-        <div class="upload-box" id="uploadBox" onclick="document.getElementById('videoInput').click()"><div id="uploadIcon" style="font-size: 40px; margin-bottom: 10px;">📸</div><div id="uploadText" style="color: #888;">Выбрать видео</div><video id="previewVideo" controls></video></div>
-        <input type="file" id="videoInput" accept="video/*" style="display: none;" onchange="previewFile(event)">
-        <textarea id="videoDesc" placeholder="Опишите ваше видео..."></textarea>
-        <button class="publish-btn" onclick="publishVideo()">Опубликовать</button>
+    <div class="reply-bar" id="replyBar">
+        <span id="replyBarText">Ответ @user</span>
+        <span onclick="cancelReply()" style="cursor:pointer;font-weight:700;">✕</span>
+    </div>
+    <div class="input-area">
+        <input type="text" id="commentInput" placeholder="Добавить комментарий..." onkeydown="if(event.key==='Enter')addComment()">
+        <button onclick="addComment()">⬆</button>
     </div>
 </div>
 
+<div class="modal" id="shareModal">
+    <div class="modal-header">Отправить друзьям<span class="close-btn" onclick="closeModals()">✕</span></div>
+    <div class="share-list" id="shareList"></div>
+    <div class="share-actions-row" id="shareActionsRow"></div>
+</div>
+
+<!-- НИЖНЕЕ МЕНЮ -->
 <div class="bottom-nav" id="main-nav">
-    <div id="nav-home" class="nav-item active" onclick="switchPage('home')"><div class="nav-icon">🏠</div>Главная</div>
-    <div id="nav-search" class="nav-item" onclick="switchPage('search')"><div class="nav-icon">🔍</div>Интересное</div>
+    <div id="nav-home" class="nav-item active" onclick="switchPage('home')">
+        <svg viewBox="0 0 24 24"><path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3l9-8z"/></svg>
+        <span>Главная</span>
+    </div>
+    <div id="nav-search" class="nav-item" onclick="switchPage('search')">
+        <svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 015.96 12.04l4.25 4.25a1 1 0 01-1.42 1.42l-4.25-4.25A7.5 7.5 0 1110.5 3zm0 2a5.5 5.5 0 100 11 5.5 5.5 0 000-11z"/></svg>
+        <span>Интересное</span>
+    </div>
     <div class="plus-btn" onclick="openUpload()"><div class="plus-btn-inner">+</div></div>
-    <div id="nav-chats" class="nav-item" onclick="switchPage('chats')"><div class="nav-icon">💬</div>Входящие</div>
-    <div id="nav-profile" class="nav-item" onclick="switchPage('profile')"><div class="nav-icon">👤</div>Профиль</div>
+    <div id="nav-chats" class="nav-item" onclick="switchPage('chats')">
+        <div class="unread-dot" id="unreadDot"></div>
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
+        <span>Входящие</span>
+    </div>
+    <div id="nav-profile" class="nav-item" onclick="switchPage('profile')">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <span>Профиль</span>
+    </div>
 </div>
 
 <script>
+// --- УВЕДОМЛЕНИЯ ---
 function showToast(msg) {
-    let container = document.getElementById('toast-container') || (()=>{ let c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); return c; })();
+    let c = document.getElementById('toast-container');
+    if (!c) { c = document.createElement('div'); c.id = 'toast-container'; document.body.appendChild(c); }
     const t = document.createElement('div'); t.className = 'tikstatus-toast'; t.innerText = msg;
-    container.appendChild(t); setTimeout(() => t.remove(), 3000);
+    c.appendChild(t); setTimeout(() => t.remove(), 2600);
 }
 
-// ГЛОБАЛЬНЫЙ МЬЮТ (КАК В РЕАЛЬНОМ TIKTOK)
-let globalMuted = true;
+// --- СИНХРОНИЗАЦИЯ С TELEGRAM WEBAPP И PYTHON БОТОМ ---
+const urlParams = new URLSearchParams(window.location.search);
+const botRole = urlParams.get('role') || 'user';
+let tgInfo = { id: 'local_user', username: 'maloy_dev', first_name: 'Maloy', photo_url: '' };
 
-// Невидимая функция разблокировки звука
-function unlockAudio() {
-    if (!globalMuted) return;
-    globalMuted = false;
-    document.querySelectorAll('.feed-video').forEach(v => {
-        v.muted = false;
-    });
-}
-// Любой первый тап по экрану включит звук во всем приложении
-document.body.addEventListener('click', unlockAudio, { once: true });
-document.body.addEventListener('touchstart', unlockAudio, { once: true });
-
-// --- ТГ WEB APP И ПРОФИЛЬ ---
-let tgUser = { username: 'user' + Math.floor(Math.random()*1000), first_name: 'Пользователь', photo_url: '' };
 if (window.Telegram && window.Telegram.WebApp) {
-    const tg = window.Telegram.WebApp; tg.expand(); tg.ready();
+    const tg = window.Telegram.WebApp;
+    tg.expand(); tg.ready();
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-        tgUser.username = tg.initDataUnsafe.user.username || tg.initDataUnsafe.user.first_name;
-        tgUser.first_name = tg.initDataUnsafe.user.first_name; tgUser.photo_url = tg.initDataUnsafe.user.photo_url || '';
+        const u = tg.initDataUnsafe.user;
+        tgInfo.id = String(u.id);
+        tgInfo.username = (u.username || ('user_' + u.id)).replace(/[^a-zA-Z0-9_.]/g, '');
+        tgInfo.first_name = u.first_name || 'Пользователь';
+        tgInfo.photo_url = u.photo_url || '';
     }
 }
 
-let defaultDB = [{ id: '1', author: 'tiktok_russia', desc: 'Первое видео со звуком! 🚀', likes: 10420, views: 25000, comments: [{user:'durov', text:'Отличный дизайн!', likes: 42, isLiked: false}], src: 'https://www.w3schools.com/html/mov_bbb.mp4', reposted: false, music: 'Оригинальный звук - tiktok_russia' }];
-let defaultUsersDB = [{ username: 'tiktok_russia', name: 'TikTok Россия', photo: 'https://via.placeholder.com/100/fe2c55/fff?text=TT', bio:'Официальный аккаунт', banned: false }, { username: 'durov', name: 'Pavel Durov', photo: 'https://via.placeholder.com/100/25f4ee/fff?text=PD', bio:'Founder', banned: false }];
+// --- БЕЗЛИМИТНАЯ БАЗА ДАННЫХ INDEXED-DB (ДЛЯ БОЛЬШИХ ВИДЕО СО ЗВУКОМ) ---
+const DB_NAME = 'TikstatusFullDB_v2';
+let idb = null;
 
-let DB = JSON.parse(localStorage.getItem('tiktok_DB')) || defaultDB;
-let usersDB = JSON.parse(localStorage.getItem('tiktok_usersDB')) || defaultUsersDB;
-let chatsDB = JSON.parse(localStorage.getItem('tiktok_chatsDB')) || {};
-let myFavorites = JSON.parse(localStorage.getItem('tiktok_myFavorites')) || [];
+function initIndexedDB() {
+    return new Promise((resolve) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('state')) db.createObjectStore('state');
+        };
+        req.onsuccess = (e) => { idb = e.target.result; resolve(); };
+        req.onerror = () => resolve();
+    });
+}
 
-let myProfile = usersDB.find(u => u.username === tgUser.username);
-if (!myProfile) {
-    myProfile = { username: tgUser.username, name: tgUser.first_name, photo: tgUser.photo_url, bio: 'Добавьте описание профиля', banned: false };
-    usersDB.push(myProfile); saveData();
-} else {
-    if(tgUser.photo_url && !myProfile.photo) myProfile.photo = tgUser.photo_url;
+function idbGet(key) {
+    return new Promise((resolve) => {
+        if (!idb) return resolve(null);
+        const tx = idb.transaction('state', 'readonly');
+        const req = tx.objectStore('state').get(key);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+    });
+}
+
+function idbSet(key, val) {
+    if (!idb) return;
+    const tx = idb.transaction('state', 'readwrite');
+    tx.objectStore('state').put(val, key);
+}
+
+// --- ГЛОБАЛЬНОЕ СОСТОЯНИЕ ---
+let DB = [];
+let usersDB = [];
+let chatsDB = {};
+let followsDB = []; // [{follower: 'u1', target: 'u2'}]
+let myProfile = null;
+let globalMuted = true; // Изначально мьют для автоплея, снимается при первом же клике
+
+const defaultVideos = [
+    {
+        id: 'vid_welcome',
+        author: 'tiktok_russia',
+        desc: 'Добро пожаловать в 100% Tikstatus! Двойной тап — лайк ❤️ Нажми на экран для звука! #tikstatus #рекомендации',
+        likes: 1250,
+        likedBy: [],
+        repostedBy: [],
+        bookmarkedBy: [],
+        views: 4800,
+        pinned: false,
+        comments: [
+            { id: 'c1', user: 'durov', text: 'Теперь работает на 100% как настоящий ТТ 🔥', likes: 85, likedBy: [], pinned: true, replies: [] }
+        ],
+        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+        music: 'Оригинальный звук — TikTok Россия'
+    }
+];
+
+const defaultUsers = [
+    { id: 'u_tt', username: 'tiktok_russia', name: 'TikTok Россия', photo: '', bio: 'Официальный канал Tikstatus 🎬', verified: true, banned: false },
+    { id: 'u_pd', username: 'durov', name: 'Pavel Durov', photo: '', bio: 'Founder of Telegram', verified: true, banned: false }
+];
+
+async function loadAllData() {
+    await initIndexedDB();
+    DB = (await idbGet('videos')) || JSON.parse(localStorage.getItem('ts_vids') || 'null') || defaultVideos;
+    usersDB = (await idbGet('users')) || JSON.parse(localStorage.getItem('ts_users') || 'null') || defaultUsers;
+    chatsDB = (await idbGet('chats')) || JSON.parse(localStorage.getItem('ts_chats') || '{}');
+    followsDB = (await idbGet('follows')) || JSON.parse(localStorage.getItem('ts_follows') || '[]');
+
+    // Строгая изоляция профиля по уникальному ID из Telegram
+    myProfile = usersDB.find(u => u.id === tgInfo.id || u.username.toLowerCase() === tgInfo.username.toLowerCase());
+    if (!myProfile) {
+        myProfile = {
+            id: tgInfo.id,
+            username: tgInfo.username,
+            name: tgInfo.first_name,
+            photo: tgInfo.photo_url,
+            bio: 'Добро пожаловать в мой профиль Tikstatus ✨',
+            verified: botRole === 'owner',
+            banned: false
+        };
+        usersDB.push(myProfile);
+    } else {
+        if (tgInfo.photo_url && !myProfile.photo) myProfile.photo = tgInfo.photo_url;
+        if (botRole === 'owner') myProfile.verified = true;
+    }
+    saveData();
+    updateProfileUI();
+    renderFeed();
 }
 
 function saveData() {
-    try { localStorage.setItem('tiktok_DB', JSON.stringify(DB)); localStorage.setItem('tiktok_usersDB', JSON.stringify(usersDB)); localStorage.setItem('tiktok_chatsDB', JSON.stringify(chatsDB)); localStorage.setItem('tiktok_myFavorites', JSON.stringify(myFavorites)); } 
-    catch (e) { console.warn('Ошибка сохранения', e); }
+    idbSet('videos', DB);
+    idbSet('users', usersDB);
+    idbSet('chats', chatsDB);
+    idbSet('follows', followsDB);
+    try {
+        localStorage.setItem('ts_users', JSON.stringify(usersDB));
+        localStorage.setItem('ts_follows', JSON.stringify(followsDB));
+    } catch(e) {}
+}
+
+function formatNumber(n) {
+    n = Number(n) || 0;
+    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+    return String(n);
+}
+
+// --- УПРАВЛЕНИЕ ЗВУКОМ (100% РАБОЧИЙ ФИКС) ---
+function updateSoundPillUI() {
+    const pill = document.getElementById('soundTogglePill');
+    if (!pill) return;
+    if (globalMuted) {
+        pill.innerHTML = '🔇 Включить звук';
+        pill.style.background = 'rgba(254, 44, 85, 0.85)';
+    } else {
+        pill.innerHTML = '🔊 Звук вкл';
+        pill.style.background = 'rgba(0, 0, 0, 0.45)';
+    }
+}
+
+function toggleGlobalSound(forceUnmute = false) {
+    globalMuted = forceUnmute ? false : !globalMuted;
+    document.querySelectorAll('.feed-video').forEach(vid => {
+        vid.muted = globalMuted;
+        vid.volume = 1.0;
+    });
+    const activeVid = getCurrentVisibleVideo();
+    if (activeVid && activeVid.paused) activeVid.play().catch(()=>{});
+    updateSoundPillUI();
+}
+
+function getCurrentVisibleVideo() {
+    const vids = document.querySelectorAll('.feed-video');
+    for (let v of vids) {
+        const r = v.getBoundingClientRect();
+        if (r.top >= -100 && r.top <= 200) return v;
+    }
+    return vids[0] || null;
 }
 
 // --- НАВИГАЦИЯ ---
 let lastPage = 'home';
 let currentPage = 'home';
+
 function switchPage(page) {
-    if(!['edit-profile', 'other-profile', 'chat-room'].includes(currentPage)) lastPage = currentPage;
+    if (!['edit-profile', 'other-profile', 'chat-room'].includes(currentPage)) lastPage = currentPage;
     currentPage = page;
+
+    // Ставим видео на паузу при уходе с главной
+    if (page !== 'home') {
+        document.querySelectorAll('.feed-video').forEach(v => v.pause());
+    }
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('upload-page').classList.remove('active');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + page).classList.add('active');
-    document.getElementById('main-nav').style.display = ['edit-profile', 'other-profile', 'chat-room'].includes(page) ? 'none' : 'flex';
-    if(document.getElementById('nav-' + page)) document.getElementById('nav-' + page).classList.add('active');
-    
-    if(page === 'home') { document.body.classList.add('feed-active'); renderFeed(); } else { document.body.classList.remove('feed-active'); }
-    if(page === 'profile') { updateProfileUI(); switchProfileTab('videos'); }
-    if(page === 'chats') renderChatList();
-}
-function formatNumber(num) { return num >= 1000000 ? (num / 1000000).toFixed(1) + 'M' : num >= 1000 ? (num / 1000).toFixed(1) + 'K' : num; }
 
-// --- ПРОФИЛИ И ИЗБРАННОЕ ---
-function updateProfileUI() {
-    document.getElementById('profile-top-name').innerText = myProfile.name;
-    document.getElementById('profile-name').innerText = myProfile.name;
-    document.getElementById('profile-username').innerText = '@' + myProfile.username;
-    document.getElementById('profile-bio').innerText = myProfile.bio || '';
-    document.getElementById('profile-avatar').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : `👤`;
-    document.getElementById('profile-likes').innerText = formatNumber(DB.filter(v => v.author === myProfile.username).reduce((s, v) => s + v.likes, 0));
+    const hideNav = ['edit-profile', 'other-profile', 'chat-room'].includes(page);
+    document.getElementById('main-nav').style.display = hideNav ? 'none' : 'flex';
+    if (document.getElementById('nav-' + page)) document.getElementById('nav-' + page).classList.add('active');
+
+    if (page === 'home') {
+        const v = getCurrentVisibleVideo();
+        if (v) { v.muted = globalMuted; v.play().catch(()=>{}); }
+    }
+    if (page === 'profile') { updateProfileUI(); switchProfileTab(currentProfileTab); }
+    if (page === 'search') handleSearch(document.getElementById('searchInput').value);
+    if (page === 'chats') renderChatList();
 }
 
-let currentProfileTab = 'videos';
-function switchProfileTab(tab) {
-    document.getElementById('tab-my-videos').classList.remove('active');
-    document.getElementById('tab-my-favorites').classList.remove('active');
-    document.getElementById('tab-my-' + tab).classList.add('active');
-    if(tab === 'videos') renderGrid('profile-video-grid', myProfile.username);
-    else renderFavoritesGrid('profile-video-grid');
-}
+// --- ОТРИСОВКА ЛЕНТЫ TIKTOK ---
+const viewedInSession = new Set();
 
-let currentOtherUser = null;
-function openOtherProfile(username) {
-    if(username === myProfile.username) return switchPage('profile');
-    currentOtherUser = usersDB.find(u => u.username === username);
-    if(!currentOtherUser || currentOtherUser.banned) return showToast('Профиль не найден или заблокирован');
-    
-    document.getElementById('other-profile-top-name').innerText = currentOtherUser.name;
-    document.getElementById('other-profile-name').innerText = currentOtherUser.name;
-    document.getElementById('other-profile-username').innerText = '@' + currentOtherUser.username;
-    document.getElementById('other-profile-bio').innerText = currentOtherUser.bio || 'Нет описания';
-    document.getElementById('other-profile-avatar').innerHTML = currentOtherUser.photo ? `<img src="${currentOtherUser.photo}">` : '👤';
-    document.getElementById('other-profile-likes').innerText = formatNumber(DB.filter(v => v.author === currentOtherUser.username).reduce((s, v) => s + v.likes, 0));
-    document.getElementById('other-profile-followers').innerText = formatNumber(Math.floor(Math.random() * 5000) + 100);
-    renderGrid('other-profile-video-grid', currentOtherUser.username);
-    closeModals(); switchPage('other-profile');
-}
-
-function renderGrid(containerId, username) {
-    const grid = document.getElementById(containerId);
-    const videos = DB.filter(v => v.author === username);
-    if (videos.length === 0) grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📹</div><div class="empty-title">Нет видео</div></div>`;
-    else grid.innerHTML = videos.map(v => `<div class="grid-item" onclick="switchPage('home')">${v.src ? `<video src="${v.src}#t=0.1" preload="metadata"></video>` : `<div style="width:100%;height:100%;background:#222;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;">📹</div>`}<div class="views">▷ ${formatNumber(v.views || 0)}</div></div>`).join('');
-}
-function renderFavoritesGrid(containerId) {
-    const grid = document.getElementById(containerId);
-    const videos = DB.filter(v => myFavorites.includes(v.id));
-    if (videos.length === 0) grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔖</div><div class="empty-title">Нет закладок</div></div>`;
-    else grid.innerHTML = videos.map(v => `<div class="grid-item" onclick="switchPage('home')">${v.src ? `<video src="${v.src}#t=0.1" preload="metadata"></video>` : `<div style="width:100%;height:100%;background:#222;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;">📹</div>`}<div class="views">▷ ${formatNumber(v.views || 0)}</div></div>`).join('');
-}
-
-// --- ЧАТЫ ---
-function renderChatList() {
-    const list = document.getElementById('chat-list-container');
-    const allUsers = usersDB.filter(u => u.username !== myProfile.username && !u.banned);
-    list.innerHTML = allUsers.map(u => {
-        const h = chatsDB[u.username] || [];
-        return `<div class="chat-item" onclick="openChat('${u.username}')"><div class="chat-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div><div class="chat-info"><div class="chat-name">${u.name}</div><div class="chat-msg">${h.length ? h[h.length-1].text : 'Начать чат'}</div></div></div>`;
-    }).join('');
-}
-let activeChatUser = null;
-function openChat(username) {
-    activeChatUser = usersDB.find(u => u.username === username);
-    document.getElementById('chat-room-name').innerText = activeChatUser.name;
-    renderChatMessages(); switchPage('chat-room');
-}
-function openChatFromProfile() { if(currentOtherUser) openChat(currentOtherUser.username); }
-function renderChatMessages() {
-    const container = document.getElementById('chat-messages-container');
-    container.innerHTML = (chatsDB[activeChatUser.username] || []).map(m => `<div class="chat-bubble ${m.sender === myProfile.username ? 'sent' : 'received'}">${m.text}</div>`).join('');
-    container.scrollTop = container.scrollHeight;
-}
-function sendChatMessage() {
-    const input = document.getElementById('chatMessageInput');
-    if(!input.value.trim()) return;
-    if(!chatsDB[activeChatUser.username]) chatsDB[activeChatUser.username] = [];
-    chatsDB[activeChatUser.username].push({sender: myProfile.username, text: input.value});
-    input.value = ''; renderChatMessages(); saveData();
-    setTimeout(() => {
-        chatsDB[activeChatUser.username].push({sender: activeChatUser.username, text: 'Привет! Это бот-ответ Tikstatus 🤖'});
-        if(currentPage === 'chat-room') renderChatMessages(); saveData();
-    }, 1500);
-}
-
-// --- ЛЕНТА И АВТОВОСПРОИЗВЕДЕНИЕ ---
-function renderFeed() {
-    const feed = document.getElementById('videoFeed'); feed.innerHTML = '';
+function renderFeed(scrollToVideoId = null) {
+    const feed = document.getElementById('videoFeed');
+    feed.innerHTML = '';
 
     DB.forEach(v => {
-        const div = document.createElement('div'); div.className = 'video-container';
-        
-        // ДОБАВЛЕНЫ: autoplay muted playsinline прямо в тег
-        let media = v.src ? `<video data-id="${v.id}" src="${v.src}" loop playsinline autoplay muted class="feed-video" onclick="toggleVideoPause(this)"></video>` : `<div class="text-placeholder">📹 Видео</div>`;
-        let authorData = usersDB.find(u => u.username === v.author) || {photo:''};
-        let isBookmarked = myFavorites.includes(v.id);
+        if (!v.likedBy) v.likedBy = [];
+        if (!v.repostedBy) v.repostedBy = [];
+        if (!v.bookmarkedBy) v.bookmarkedBy = [];
 
-        div.innerHTML = `${media}<div class="video-overlay"></div>
-            <div class="top-nav"><span class="active">Рекомендации</span></div>
-            <div class="video-info">${v.reposted ? `<div class="repost-badge">🔁 Репост</div>` : ''}
-                <h3 onclick="openOtherProfile('${v.author}')">@${v.author}</h3><p>${v.desc}</p>
-                <div class="music-info">🎵 <div class="music-ticker"><marquee scrollamount="4">${v.music}</marquee></div></div>
+        const div = document.createElement('div');
+        div.className = 'video-container';
+        div.id = 'feed-item-' + v.id;
+
+        const authorObj = usersDB.find(u => u.username === v.author) || { name: v.author, photo: '', verified: false };
+        const isLiked = v.likedBy.includes(myProfile.username);
+        const isBookmarked = v.bookmarkedBy.includes(myProfile.username);
+        const isFollowingAuthor = followsDB.some(f => f.follower === myProfile.username && f.target === v.author);
+        const showFollowPlus = v.author !== myProfile.username;
+
+        const repostText = v.repostedBy.length > 0 ? `<div class="repost-badge">🔁 Репостнул(а) @${v.repostedBy[v.repostedBy.length - 1]}</div>` : '';
+
+        div.innerHTML = `
+            <video data-id="${v.id}" src="${v.src}" loop playsinline webkit-playsinline preload="auto" class="feed-video"></video>
+            <div class="video-overlay"></div>
+            <div class="play-indicator" id="play-ind-${v.id}">
+                <svg width="72" height="72" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><path d="M8 5v14l11-7z"/></svg>
             </div>
+
+            <div class="video-info">
+                ${repostText}
+                <div class="video-author" onclick="openOtherProfile('${v.author}')">
+                    @${v.author} ${authorObj.verified ? '<span class="verified-badge">✔</span>' : ''}
+                </div>
+                <div class="video-desc">${v.desc}</div>
+                <div class="music-row">
+                    <span>🎵</span>
+                    <div class="music-marquee">${v.music || ('Оригинальный звук — ' + authorObj.name)}</div>
+                </div>
+            </div>
+
             <div class="side-buttons">
-                <div class="btn-wrapper" onclick="toggleLike('${v.id}')"><div class="btn-icon-box ${v.likedByMe?'liked':''}" id="like-icon-${v.id}">${v.likedByMe?'❤️':'🤍'}</div><div class="btn-text" id="like-count-${v.id}">${formatNumber(v.likes)}</div></div>
-                <div class="btn-wrapper" onclick="openComments('${v.id}')"><div class="btn-icon-box">💬</div><div class="btn-text" id="comment-count-${v.id}">${formatNumber(v.comments.length)}</div></div>
-                <div class="btn-wrapper" onclick="toggleFavorite('${v.id}')"><div class="btn-icon-box" id="fav-icon-${v.id}" style="color:${isBookmarked?'#f4c025':'#fff'};">🔖</div><div class="btn-text">Сохранить</div></div>
-                <div class="btn-wrapper" onclick="openShare('${v.id}')"><div class="btn-icon-box">↗️</div><div class="btn-text">Поделиться</div></div>
-                <div class="music-disc" onclick="openOtherProfile('${v.author}')"><img src="${authorData.photo || 'https://via.placeholder.com/40/333/fff?text=🎵'}"></div>
-            </div>`;
+                <div class="author-avatar-wrap">
+                    <div onclick="openOtherProfile('${v.author}')">
+                        ${authorObj.photo ? `<img src="${authorObj.photo}">` : `<div class="avatar-fallback">👤</div>`}
+                    </div>
+                    ${showFollowPlus ? `<div class="follow-plus-badge ${isFollowingAuthor ? 'followed' : ''}" id="feed-follow-${v.id}" onclick="quickFollowFromFeed('${v.author}', '${v.id}')">${isFollowingAuthor ? '✓' : '+'}</div>` : ''}
+                </div>
+
+                <div class="btn-wrapper" onclick="toggleLike('${v.id}')">
+                    <svg class="btn-icon-svg ${isLiked ? 'liked' : ''}" id="like-svg-${v.id}" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    <div class="btn-text" id="like-count-${v.id}">${formatNumber(v.likes)}</div>
+                </div>
+
+                <div class="btn-wrapper" onclick="openComments('${v.id}')">
+                    <svg class="btn-icon-svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14l4 4V4c0-1.1-.9-2-2-2zm-11 9H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg>
+                    <div class="btn-text" id="comment-count-${v.id}">${formatNumber(v.comments.length)}</div>
+                </div>
+
+                <div class="btn-wrapper" onclick="toggleFavorite('${v.id}')">
+                    <svg class="btn-icon-svg ${isBookmarked ? 'bookmarked' : ''}" id="fav-svg-${v.id}" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                    <div class="btn-text" id="fav-count-${v.id}">${formatNumber(v.bookmarkedBy.length)}</div>
+                </div>
+
+                <div class="btn-wrapper" onclick="openShare('${v.id}')">
+                    <svg class="btn-icon-svg" viewBox="0 0 24 24"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+                    <div class="btn-text">Поделиться</div>
+                </div>
+
+                <div class="music-disc" onclick="openOtherProfile('${v.author}')">
+                    ${authorObj.photo ? `<img src="${authorObj.photo}">` : '🎵'}
+                </div>
+            </div>
+
+            <div class="video-progress-wrap" onclick="scrubVideo(event, '${v.id}')">
+                <div class="video-progress-bg"><div class="video-progress-fill" id="prog-${v.id}"></div></div>
+            </div>
+        `;
+
+        // Обработка одинарного (пауза + звук) и двойного тапа (лайк с сердечком)
+        const vidEl = div.querySelector('video');
+        let lastTap = 0;
+        let singleTapTimer = null;
+
+        vidEl.addEventListener('click', (e) => {
+            const now = Date.now();
+            if (now - lastTap < 280) {
+                clearTimeout(singleTapTimer);
+                spawnDoubleTapHeart(e.clientX, e.clientY, div);
+                if (!v.likedBy.includes(myProfile.username)) toggleLike(v.id);
+            } else {
+                singleTapTimer = setTimeout(() => {
+                    if (globalMuted || vidEl.muted) {
+                        toggleGlobalSound(true);
+                        vidEl.play().catch(()=>{});
+                        document.getElementById('play-ind-' + v.id).classList.remove('paused');
+                    } else {
+                        if (vidEl.paused) {
+                            vidEl.play();
+                            document.getElementById('play-ind-' + v.id).classList.remove('paused');
+                        } else {
+                            vidEl.pause();
+                            document.getElementById('play-ind-' + v.id).classList.add('paused');
+                        }
+                    }
+                }, 240);
+            }
+            lastTap = now;
+        });
+
+        vidEl.addEventListener('timeupdate', () => {
+            if (vidEl.duration) {
+                const pct = (vidEl.currentTime / vidEl.duration) * 100;
+                const bar = document.getElementById('prog-' + v.id);
+                if (bar) bar.style.width = pct + '%';
+            }
+        });
+
         feed.appendChild(div);
     });
+
+    updateSoundPillUI();
     observeVideos();
+
+    if (scrollToVideoId) {
+        const targetEl = document.getElementById('feed-item-' + scrollToVideoId);
+        if (targetEl) targetEl.scrollIntoView();
+    }
 }
 
-function toggleVideoPause(vid) { vid.paused ? vid.play() : vid.pause(); }
+function spawnDoubleTapHeart(x, y, container) {
+    const h = document.createElement('div');
+    h.className = 'double-tap-heart';
+    h.innerText = '❤️';
+    const rect = container.getBoundingClientRect();
+    h.style.left = (x - rect.left) + 'px';
+    h.style.top = (y - rect.top) + 'px';
+    container.appendChild(h);
+    setTimeout(() => h.remove(), 850);
+}
+
+function scrubVideo(e, id) {
+    e.stopPropagation();
+    const vid = document.querySelector(`video[data-id="${id}"]`);
+    if (!vid || !vid.duration) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pos = (e.clientX - rect.left) / rect.width;
+    vid.currentTime = pos * vid.duration;
+}
 
 function observeVideos() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             const vid = entry.target;
+            const id = vid.getAttribute('data-id');
+            const ind = document.getElementById('play-ind-' + id);
+
             if (entry.isIntersecting) {
-                // Применяем глобальный мьют
+                if (ind) ind.classList.remove('paused');
                 vid.muted = globalMuted;
-                
-                let playPromise = vid.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(e => {
-                        vid.muted = true; // Если браузер все еще блочит, играем без звука
-                        vid.play();
-                    });
+                vid.volume = 1.0;
+                vid.play().catch(() => {
+                    // Если мобильный браузер заблокировал автоплей со звуком — запускаем без звука
+                    globalMuted = true;
+                    vid.muted = true;
+                    updateSoundPillUI();
+                    vid.play().catch(()=>{});
+                });
+
+                if (!viewedInSession.has(id)) {
+                    viewedInSession.add(id);
+                    const vObj = DB.find(x => x.id === id);
+                    if (vObj) { vObj.views = (vObj.views || 0) + 1; saveData(); }
                 }
-                
-                // Фикс накрутки просмотров (засчитываем 1 раз за сессию ленты)
-                const v = DB.find(x => x.id === vid.getAttribute('data-id'));
-                if(v && !vid.dataset.viewed) { 
-                    v.views = (v.views || 0) + 1; 
-                    vid.dataset.viewed = "true";
-                    saveData(); 
-                }
-            } else { 
-                vid.pause(); 
-                vid.currentTime = 0; 
+            } else {
+                vid.pause();
+                vid.currentTime = 0;
             }
         });
-    }, { threshold: 0.6 });
+    }, { threshold: 0.65 });
+
     document.querySelectorAll('.feed-video').forEach(v => observer.observe(v));
 }
 
+// --- ЛАЙКИ, ЗАКЛАДКИ И ПОДПИСКИ ---
 function toggleLike(id) {
-    const v = DB.find(x => x.id === id); v.likedByMe ? (v.likes--, v.likedByMe = false) : (v.likes++, v.likedByMe = true);
-    document.getElementById(`like-icon-${id}`).innerText = v.likedByMe ? '❤️' : '🤍'; document.getElementById(`like-icon-${id}`).className = `btn-icon-box ${v.likedByMe ? 'liked' : ''}`;
-    document.getElementById(`like-count-${id}`).innerText = formatNumber(v.likes); saveData(); 
-}
+    const v = DB.find(x => x.id === id);
+    if (!v) return;
+    if (!v.likedBy) v.likedBy = [];
+    const idx = v.likedBy.indexOf(myProfile.username);
+    const svg = document.getElementById('like-svg-' + id);
 
-function toggleFavorite(id) {
-    if(myFavorites.includes(id)) { myFavorites = myFavorites.filter(fav => fav !== id); document.getElementById(`fav-icon-${id}`).style.color = '#fff'; showToast('Удалено из закладок'); } 
-    else { myFavorites.push(id); document.getElementById(`fav-icon-${id}`).style.color = '#f4c025'; showToast('Сохранено в закладки'); }
+    if (idx > -1) {
+        v.likedBy.splice(idx, 1);
+        v.likes = Math.max(0, v.likes - 1);
+        if (svg) svg.classList.remove('liked');
+    } else {
+        v.likedBy.push(myProfile.username);
+        v.likes++;
+        if (svg) svg.classList.add('liked');
+    }
+    const cnt = document.getElementById('like-count-' + id);
+    if (cnt) cnt.innerText = formatNumber(v.likes);
     saveData();
 }
 
-// --- КОММЕНТАРИИ И ШЕЙР ---
-let currentVid = null;
-function openComments(id) {
-    currentVid = id; const v = DB.find(x => x.id === id); document.getElementById('comment-count-title').innerText = `${v.comments.length} комментариев`;
-    renderCommentsList(v); document.getElementById('modalOverlay').classList.add('active'); setTimeout(() => { document.getElementById('commentsModal').classList.add('open'); }, 10);
-}
-function renderCommentsList(v) {
-    document.getElementById('commentsList').innerHTML = v.comments.map((c, index) => `
-        <div class="comment">
-            <div class="comment-left"><div class="comment-avatar" onclick="openOtherProfile('${c.user}')">${c.photo ? `<img src="${c.photo}">` : `👤`}</div><div><div class="comment-user" onclick="openOtherProfile('${c.user}')">${c.user}</div><div class="comment-text">${c.text}</div></div></div>
-            <div class="comment-like ${c.isLiked ? 'active' : ''}" onclick="toggleCommentLike(${index})"><div style="font-size: 16px;">${c.isLiked ? '❤️' : '🤍'}</div><div>${c.likes || 0}</div></div>
-        </div>`).join('');
-}
-function toggleCommentLike(index) { const v = DB.find(x => x.id === currentVid); const c = v.comments[index]; c.isLiked ? (c.likes--, c.isLiked = false) : (c.likes = (c.likes||0)+1, c.isLiked = true); renderCommentsList(v); saveData(); }
-function closeModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('open')); setTimeout(() => document.getElementById('modalOverlay').classList.remove('active'), 300); }
-function addComment() {
-    const input = document.getElementById('commentInput'); if(!input.value.trim()) return; const v = DB.find(x => x.id === currentVid);
-    v.comments.push({ user: myProfile.username, text: input.value, photo: myProfile.photo, likes: 0, isLiked: false });
-    document.getElementById('comment-count-' + currentVid).innerText = formatNumber(v.comments.length); document.getElementById('comment-count-title').innerText = `${v.comments.length} комментариев`;
-    renderCommentsList(v); input.value = ''; document.getElementById('commentsList').scrollTop = document.getElementById('commentsList').scrollHeight; saveData();
+function toggleFavorite(id) {
+    const v = DB.find(x => x.id === id);
+    if (!v) return;
+    if (!v.bookmarkedBy) v.bookmarkedBy = [];
+    const idx = v.bookmarkedBy.indexOf(myProfile.username);
+    const svg = document.getElementById('fav-svg-' + id);
+
+    if (idx > -1) {
+        v.bookmarkedBy.splice(idx, 1);
+        if (svg) svg.classList.remove('bookmarked');
+        showToast('Удалено из избранного');
+    } else {
+        v.bookmarkedBy.push(myProfile.username);
+        if (svg) svg.classList.add('bookmarked');
+        showToast('Добавлено в избранное 🔖');
+    }
+    const cnt = document.getElementById('fav-count-' + id);
+    if (cnt) cnt.innerText = formatNumber(v.bookmarkedBy.length);
+    saveData();
 }
 
-let shareVideoId = null;
-function openShare(id) {
-    shareVideoId = id; const list = document.getElementById('shareList'); const friends = usersDB.filter(u => u.username !== myProfile.username && !u.banned);
-    list.innerHTML = `<div class="share-user-item" onclick="doRepost()"><div class="avatar" style="background:#25f4ee; font-size:24px;">🔁</div><div class="share-user-name">Репост</div></div>` + friends.map(u => `<div class="share-user-item" onclick="sendVideoToUser('${u.username}')"><div class="avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div><div class="share-user-name">${u.name}</div></div>`).join('');
-    document.getElementById('modalOverlay').classList.add('active'); setTimeout(() => document.getElementById('shareModal').classList.add('open'), 10);
+function quickFollowFromFeed(targetUser, vidId) {
+    toggleFollowUser(targetUser);
+    renderFeed(vidId);
 }
-function doRepost() { const v = DB.find(x => x.id === shareVideoId); if(v.reposted) { showToast('Уже репостнули'); return; } v.reposted = true; renderFeed(); saveData(); closeModals(); }
-function sendVideoToUser(username) { if(!chatsDB[username]) chatsDB[username] = []; chatsDB[username].push({sender: myProfile.username, text: 'Отправил(а) видео: @' + DB.find(x => x.id === shareVideoId).author}); saveData(); closeModals(); showToast('Отправлено ' + username); }
+
+function toggleFollowUser(targetUsername) {
+    if (targetUsername === myProfile.username) return;
+    const idx = followsDB.findIndex(f => f.follower === myProfile.username && f.target === targetUsername);
+    if (idx > -1) {
+        followsDB.splice(idx, 1);
+        showToast('Вы отписались от @' + targetUsername);
+    } else {
+        followsDB.push({ follower: myProfile.username, target: targetUsername });
+        showToast('Вы подписались на @' + targetUsername + ' ❤️');
+    }
+    saveData();
+}
+
+// --- ПРОФИЛЬ (МОЙ И ЧУЖОЙ) ---
+let currentProfileTab = 'videos';
+let currentOtherProfileTab = 'videos';
+let currentOtherUser = null;
+
+function getStatsForUser(username) {
+    const following = followsDB.filter(f => f.follower === username).length;
+    const followers = followsDB.filter(f => f.target === username).length;
+    const likes = DB.filter(v => v.author === username).reduce((s, v) => s + (v.likes || 0), 0);
+    return { following, followers, likes };
+}
+
+function updateProfileUI() {
+    document.getElementById('profile-top-name').innerText = myProfile.name;
+    document.getElementById('profile-name').innerHTML = `${myProfile.name} ${myProfile.verified ? '<span class="verified-badge">✔</span>' : ''}`;
+    document.getElementById('profile-username').innerText = '@' + myProfile.username;
+    document.getElementById('profile-bio').innerText = myProfile.bio || '';
+    document.getElementById('profile-avatar').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : '👤';
+
+    const st = getStatsForUser(myProfile.username);
+    document.getElementById('profile-following').innerText = formatNumber(st.following);
+    document.getElementById('profile-followers').innerText = formatNumber(st.followers);
+    document.getElementById('profile-likes').innerText = formatNumber(st.likes);
+}
+
+function switchProfileTab(tab) {
+    currentProfileTab = tab;
+    ['videos', 'reposts', 'favorites'].forEach(t => document.getElementById('tab-my-' + t).classList.remove('active'));
+    document.getElementById('tab-my-' + tab).classList.add('active');
+
+    let list = [];
+    if (tab === 'videos') {
+        list = DB.filter(v => v.author === myProfile.username).sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+    } else if (tab === 'reposts') {
+        list = DB.filter(v => (v.repostedBy || []).includes(myProfile.username));
+    } else if (tab === 'favorites') {
+        list = DB.filter(v => (v.bookmarkedBy || []).includes(myProfile.username));
+    }
+    renderVideoGrid('profile-video-grid', list, tab === 'videos' ? 'Ни одного видео пока нет.' : 'Здесь пока пусто.');
+}
+
+function openOtherProfile(username) {
+    closeModals();
+    if (username === myProfile.username) return switchPage('profile');
+    currentOtherUser = usersDB.find(u => u.username === username) || { username, name: username, photo: '', bio: 'Пользователь Tikstatus', verified: false };
+
+    document.getElementById('other-profile-top-name').innerText = currentOtherUser.name;
+    document.getElementById('other-profile-name').innerHTML = `${currentOtherUser.name} ${currentOtherUser.verified ? '<span class="verified-badge">✔</span>' : ''}`;
+    document.getElementById('other-profile-username').innerText = '@' + currentOtherUser.username;
+    document.getElementById('other-profile-bio').innerText = currentOtherUser.bio || '';
+    document.getElementById('other-profile-avatar').innerHTML = currentOtherUser.photo ? `<img src="${currentOtherUser.photo}">` : '👤';
+
+    updateOtherProfileFollowUI();
+    switchOtherProfileTab('videos');
+    switchPage('other-profile');
+}
+
+function updateOtherProfileFollowUI() {
+    if (!currentOtherUser) return;
+    const st = getStatsForUser(currentOtherUser.username);
+    document.getElementById('other-profile-following').innerText = formatNumber(st.following);
+    document.getElementById('other-profile-followers').innerText = formatNumber(st.followers);
+    document.getElementById('other-profile-likes').innerText = formatNumber(st.likes);
+
+    const isFollowing = followsDB.some(f => f.follower === myProfile.username && f.target === currentOtherUser.username);
+    const btn = document.getElementById('other-follow-btn');
+    btn.innerText = isFollowing ? 'Вы подписаны' : 'Подписаться';
+    btn.className = isFollowing ? 'profile-btn following' : 'profile-btn primary';
+}
+
+function toggleFollowOther() {
+    if (!currentOtherUser) return;
+    toggleFollowUser(currentOtherUser.username);
+    updateOtherProfileFollowUI();
+}
+
+function switchOtherProfileTab(tab) {
+    currentOtherProfileTab = tab;
+    ['videos', 'reposts'].forEach(t => document.getElementById('tab-other-' + t).classList.remove('active'));
+    document.getElementById('tab-other-' + tab).classList.add('active');
+
+    let list = [];
+    if (tab === 'videos') list = DB.filter(v => v.author === currentOtherUser.username).sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+    else list = DB.filter(v => (v.repostedBy || []).includes(currentOtherUser.username));
+    renderVideoGrid('other-profile-video-grid', list, 'Ни одного видео пока нет.');
+}
+
+function renderVideoGrid(containerId, videos, emptyMsg) {
+    const grid = document.getElementById(containerId);
+    if (!videos.length) {
+        grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📹</div><div class="empty-title">${emptyMsg}</div></div>`;
+        return;
+    }
+    grid.innerHTML = videos.map(v => `
+        <div class="grid-item" onclick="watchVideoFromGrid('${v.id}')">
+            ${v.pinned ? '<div class="pinned-tag">Закреплено</div>' : ''}
+            <video src="${v.src}#t=0.1" preload="metadata" playsinline muted></video>
+            <div class="views">▷ ${formatNumber(v.views || 0)}</div>
+        </div>
+    `).join('');
+}
+
+function watchVideoFromGrid(vidId) {
+    switchPage('home');
+    renderFeed(vidId);
+    toggleGlobalSound(true);
+}
+
+function shareMyProfile() {
+    if (navigator.clipboard) navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?user=' + myProfile.username);
+    showToast('Tikstatus: Ссылка на профиль @' + myProfile.username + ' скопирована!');
+}
+
+// --- КОММЕНТАРИИ (ЛАЙКИ, ОТВЕТЫ, ЗАКРЕП) ---
+let currentVid = null;
+let replyToIndex = null;
+
+function openComments(id) {
+    currentVid = id;
+    replyToIndex = null;
+    document.getElementById('replyBar').classList.remove('active');
+    const v = DB.find(x => x.id === id);
+    renderCommentsList(v);
+    document.getElementById('modalOverlay').classList.add('active');
+    setTimeout(() => document.getElementById('commentsModal').classList.add('open'), 10);
+}
+
+function renderCommentsList(v) {
+    const total = v.comments.reduce((acc, c) => acc + 1 + (c.replies ? c.replies.length : 0), 0);
+    document.getElementById('comment-count-title').innerText = `${total} комментариев`;
+    const cntEl = document.getElementById('comment-count-' + v.id);
+    if (cntEl) cntEl.innerText = formatNumber(total);
+
+    // Сортируем: закрепленные всегда сверху
+    v.comments.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+
+    const canPin = v.author === myProfile.username || botRole === 'owner';
+
+    document.getElementById('commentsList').innerHTML = v.comments.map((c, idx) => {
+        if (!c.likedBy) c.likedBy = [];
+        if (!c.replies) c.replies = [];
+        const isLiked = c.likedBy.includes(myProfile.username);
+        const uObj = usersDB.find(u => u.username === c.user) || { photo: '' };
+
+        return `
+        <div class="comment-item">
+            <div class="comment-main">
+                <div class="comment-left">
+                    <div class="comment-avatar" onclick="openOtherProfile('${c.user}')">${uObj.photo ? `<img src="${uObj.photo}">` : '👤'}</div>
+                    <div style="flex:1;">
+                        <div class="comment-user" onclick="openOtherProfile('${c.user}')">
+                            @${c.user}
+                            ${c.user === v.author ? '<span class="author-tag">• Автор</span>' : ''}
+                            ${c.pinned ? '<span class="pinned-badge">📌 Закреплено</span>' : ''}
+                        </div>
+                        <div class="comment-text">${c.text}</div>
+                        <div class="comment-actions">
+                            <span onclick="startReply(${idx}, '${c.user}')">Ответить</span>
+                            ${canPin ? `<span onclick="togglePinComment(${idx})">${c.pinned ? 'Открепить' : '📌 Закрепить'}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-like ${isLiked ? 'active' : ''}" onclick="toggleCommentLike(${idx})">
+                    <span style="font-size:15px;">${isLiked ? '❤️' : '🤍'}</span>
+                    <span>${c.likes || 0}</span>
+                </div>
+            </div>
+            ${c.replies.length ? `<div class="replies-wrap">${c.replies.map(r => `
+                <div style="margin-top:8px;font-size:13px;">
+                    <b onclick="openOtherProfile('${r.user}')" style="color:#555;cursor:pointer;">@${r.user}:</b> ${r.text}
+                </div>
+            `).join('')}</div>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function startReply(idx, username) {
+    replyToIndex = idx;
+    document.getElementById('replyBarText').innerText = 'Ответ пользователю @' + username;
+    document.getElementById('replyBar').classList.add('active');
+    document.getElementById('commentInput').focus();
+}
+
+function cancelReply() {
+    replyToIndex = null;
+    document.getElementById('replyBar').classList.remove('active');
+}
+
+function togglePinComment(idx) {
+    const v = DB.find(x => x.id === currentVid);
+    v.comments[idx].pinned = !v.comments[idx].pinned;
+    saveData();
+    renderCommentsList(v);
+    showToast(v.comments[idx].pinned ? 'Комментарий закреплен 📌' : 'Комментарий откреплен');
+}
+
+function toggleCommentLike(idx) {
+    const v = DB.find(x => x.id === currentVid);
+    const c = v.comments[idx];
+    if (!c.likedBy) c.likedBy = [];
+    const i = c.likedBy.indexOf(myProfile.username);
+    if (i > -1) { c.likedBy.splice(i, 1); c.likes = Math.max(0, (c.likes || 1) - 1); }
+    else { c.likedBy.push(myProfile.username); c.likes = (c.likes || 0) + 1; }
+    saveData();
+    renderCommentsList(v);
+}
+
+function addComment() {
+    const input = document.getElementById('commentInput');
+    const txt = input.value.trim();
+    if (!txt) return;
+    const v = DB.find(x => x.id === currentVid);
+
+    if (replyToIndex !== null && v.comments[replyToIndex]) {
+        if (!v.comments[replyToIndex].replies) v.comments[replyToIndex].replies = [];
+        v.comments[replyToIndex].replies.push({ user: myProfile.username, text: txt });
+        cancelReply();
+    } else {
+        v.comments.push({ id: 'c_' + Date.now(), user: myProfile.username, text: txt, likes: 0, likedBy: [], pinned: false, replies: [] });
+    }
+    input.value = '';
+    saveData();
+    renderCommentsList(v);
+}
+
+function closeModals() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+    setTimeout(() => document.getElementById('modalOverlay').classList.remove('active'), 260);
+}
+
+// --- ШЕЙР, РЕПОСТ В ЛС И ДЕЙСТВИЯ С ВИДЕО ---
+let shareVideoId = null;
+
+function openShare(id) {
+    shareVideoId = id;
+    const v = DB.find(x => x.id === id);
+    const friends = usersDB.filter(u => u.username !== myProfile.username);
+
+    document.getElementById('shareList').innerHTML = friends.length ? friends.map(u => `
+        <div class="share-item" onclick="sendVideoToUser('${u.username}')">
+            <div class="share-circle">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
+            <div class="share-label">${u.name}</div>
+        </div>
+    `).join('') : '<div style="font-size:13px;color:#888;">Нет других пользователей</div>';
+
+    const isReposted = (v.repostedBy || []).includes(myProfile.username);
+    const isMyVid = v.author === myProfile.username || botRole === 'owner';
+
+    document.getElementById('shareActionsRow').innerHTML = `
+        <div class="share-item" onclick="doRepost()">
+            <div class="share-circle" style="background:${isReposted ? '#fe2c55' : '#25f4ee'};color:#fff;">🔁</div>
+            <div class="share-label">${isReposted ? 'Убрать репост' : 'Репост'}</div>
+        </div>
+        <div class="share-item" onclick="copyVidLink()">
+            <div class="share-circle">🔗</div>
+            <div class="share-label">Ссылка</div>
+        </div>
+        ${isMyVid ? `
+        <div class="share-item" onclick="togglePinVideo('${v.id}')">
+            <div class="share-circle">📌</div>
+            <div class="share-label">${v.pinned ? 'Открепить' : 'В профиль'}</div>
+        </div>
+        <div class="share-item" onclick="deleteVideo('${v.id}')">
+            <div class="share-circle" style="color:#fe2c55;">🗑</div>
+            <div class="share-label">Удалить</div>
+        </div>` : ''}
+    `;
+
+    document.getElementById('modalOverlay').classList.add('active');
+    setTimeout(() => document.getElementById('shareModal').classList.add('open'), 10);
+}
+
+function doRepost() {
+    const v = DB.find(x => x.id === shareVideoId);
+    if (!v.repostedBy) v.repostedBy = [];
+    const i = v.repostedBy.indexOf(myProfile.username);
+    if (i > -1) {
+        v.repostedBy.splice(i, 1);
+        showToast('Репост отменен');
+    } else {
+        v.repostedBy.push(myProfile.username);
+        showToast('Вы репостнули видео 🔁');
+    }
+    saveData(); closeModals(); renderFeed(shareVideoId);
+}
+
+function copyVidLink() {
+    closeModals();
+    showToast('Tikstatus: Ссылка на видео скопирована!');
+}
+
+function togglePinVideo(id) {
+    const v = DB.find(x => x.id === id);
+    v.pinned = !v.pinned;
+    saveData(); closeModals();
+    showToast(v.pinned ? 'Видео закреплено в профиле 📌' : 'Видео откреплено');
+}
+
+function deleteVideo(id) {
+    if (DB.length <= 1) return showToast('Нельзя удалить последнее видео в ленте!');
+    DB = DB.filter(x => x.id !== id);
+    saveData(); closeModals(); renderFeed();
+    showToast('Видео удалено 🗑');
+}
+
+function sendVideoToUser(username) {
+    const v = DB.find(x => x.id === shareVideoId);
+    const key = [myProfile.username, username].sort().join('__');
+    if (!chatsDB[key]) chatsDB[key] = [];
+    chatsDB[key].push({
+        sender: myProfile.username,
+        text: `Поделился(-ась) видео @${v.author}`,
+        vidId: v.id
+    });
+    saveData(); closeModals();
+    showToast('Видео отправлено пользователю @' + username + ' ✈️');
+}
 
 // --- ПОИСК ---
 function handleSearch(query) {
-    const q = query.trim().toLowerCase().replace('@', ''); 
-    if (!q) return document.getElementById('search-results').innerHTML = '<div class="search-empty">Введите имя для поиска</div>';
-    const results = usersDB.filter(u => !u.banned && (u.username.toLowerCase().includes(q) || u.name.toLowerCase().includes(q)));
-    document.getElementById('search-results').innerHTML = results.length ? results.map(u => `<div class="user-result" onclick="openOtherProfile('${u.username}')"><div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div><div class="user-result-info"><div class="user-result-name">${u.name}</div><div class="user-result-username">@${u.username}</div></div></div>`).join('') : `<div class="search-empty">Пользователь не найден</div>`;
+    const q = (query || '').trim().toLowerCase().replace('@', '');
+    const list = q ? usersDB.filter(u => u.username.toLowerCase().includes(q) || u.name.toLowerCase().includes(q)) : usersDB;
+
+    document.getElementById('search-results').innerHTML = list.length ? list.map(u => `
+        <div class="user-result" onclick="openOtherProfile('${u.username}')">
+            <div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
+            <div class="user-result-info">
+                <div class="user-result-name">${u.name} ${u.verified ? '<span class="verified-badge">✔</span>' : ''}</div>
+                <div class="user-result-username">@${u.username} • ${formatNumber(getStatsForUser(u.username).followers)} подписчиков</div>
+            </div>
+        </div>
+    `).join('') : '<div style="text-align:center;color:#666;margin-top:40px;">Пользователи не найдены</div>';
 }
+
 function clearSearch() { document.getElementById('searchInput').value = ''; handleSearch(''); }
 
+// --- ВХОДЯЩИЕ И ЧАТЫ ---
+let activeChatUser = null;
+
+function getChatKey(u1, u2) { return [u1, u2].sort().join('__'); }
+
+function renderChatList() {
+    const list = document.getElementById('chat-list-container');
+    const others = usersDB.filter(u => u.username !== myProfile.username);
+    list.innerHTML = others.map(u => {
+        const h = chatsDB[getChatKey(myProfile.username, u.username)] || [];
+        const last = h.length ? h[h.length - 1].text : 'Нажмите, чтобы написать сообщение';
+        return `
+        <div class="chat-item" onclick="openChat('${u.username}')">
+            <div class="chat-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
+            <div class="chat-info">
+                <div class="chat-name">${u.name} (@${u.username})</div>
+                <div class="chat-msg">${last}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function openChat(username) {
+    activeChatUser = usersDB.find(u => u.username === username) || { username, name: username, photo: '' };
+    document.getElementById('chat-room-name').innerText = activeChatUser.name;
+    renderChatMessages();
+    switchPage('chat-room');
+}
+
+function openChatFromProfile() { if (currentOtherUser) openChat(currentOtherUser.username); }
+
+function renderChatMessages() {
+    const c = document.getElementById('chat-messages-container');
+    const history = chatsDB[getChatKey(myProfile.username, activeChatUser.username)] || [];
+    c.innerHTML = history.map(m => `
+        <div class="chat-bubble ${m.sender === myProfile.username ? 'sent' : 'received'}">
+            <div>${m.text}</div>
+            ${m.vidId ? `<div class="shared-video-card" onclick="watchVideoFromGrid('${m.vidId}')">🎬 <span>Смотреть видео в ленте</span></div>` : ''}
+        </div>
+    `).join('');
+    c.scrollTop = c.scrollHeight;
+}
+
+function sendChatMessage() {
+    const inp = document.getElementById('chatMessageInput');
+    const txt = inp.value.trim();
+    if (!txt || !activeChatUser) return;
+    const key = getChatKey(myProfile.username, activeChatUser.username);
+    if (!chatsDB[key]) chatsDB[key] = [];
+    chatsDB[key].push({ sender: myProfile.username, text: txt });
+    inp.value = '';
+    saveData();
+    renderChatMessages();
+}
+
 // --- РЕДАКТИРОВАНИЕ ПРОФИЛЯ ---
-function openEditProfile() {
-    document.getElementById('edit-name-input').value = myProfile.name; document.getElementById('edit-username-input').value = myProfile.username; document.getElementById('edit-bio-input').value = myProfile.bio || '';
-    document.getElementById('edit-avatar-preview').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : `👤`; switchPage('edit-profile');
-}
 let tempAvatar = null;
-function previewEditAvatar(e) { if(!e.target.files[0]) return; const reader = new FileReader(); reader.onload = e => { tempAvatar = e.target.result; document.getElementById('edit-avatar-preview').innerHTML = `<img src="${tempAvatar}">`; }; reader.readAsDataURL(e.target.files[0]); }
-function saveProfile() {
-    const newName = document.getElementById('edit-name-input').value.trim(); const newUsername = document.getElementById('edit-username-input').value.trim().replace(/[^a-zA-Z0-9_.]/g, '');
-    if(!newName || !newUsername) return showToast('Имя и юзернейм обязательны!');
-    if (myProfile.username !== newUsername) { DB.forEach(v => { if(v.author === myProfile.username) v.author = newUsername; v.comments.forEach(c => { if(c.user === myProfile.username) c.user = newUsername; }); }); }
-    myProfile.name = newName; myProfile.username = newUsername; myProfile.bio = document.getElementById('edit-bio-input').value.trim(); if (tempAvatar) myProfile.photo = tempAvatar;
-    saveData(); updateProfileUI(); showToast('Профиль обновлен!'); switchPage('profile');
+
+function openEditProfile() {
+    tempAvatar = null;
+    document.getElementById('edit-name-input').value = myProfile.name;
+    document.getElementById('edit-username-input').value = myProfile.username;
+    document.getElementById('edit-bio-input').value = myProfile.bio || '';
+    document.getElementById('edit-avatar-preview').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : '👤';
+    switchPage('edit-profile');
 }
 
-// --- ЗАГРУЗКА ---
-let selectedFile = null;
-function openUpload() { document.getElementById('upload-page').classList.add('active'); document.getElementById('previewVideo').style.display = 'none'; document.getElementById('uploadIcon').style.display = 'block'; document.getElementById('uploadText').style.display = 'block'; selectedFile = null; }
-function closeUpload() { document.getElementById('upload-page').classList.remove('active'); }
-function previewFile(e) {
-    if(!e.target.files[0]) return; selectedFile = e.target.files[0];
-    document.getElementById('previewVideo').src = URL.createObjectURL(selectedFile); document.getElementById('previewVideo').style.display = 'block';
-    document.getElementById('uploadIcon').style.display = 'none'; document.getElementById('uploadText').style.display = 'none';
-}
-function publishVideo() {
-    if(!selectedFile) return showToast('Выберите видео!');
-    const reader = new FileReader();
-    reader.onload = e => {
-        DB.unshift({ id: Date.now().toString(), author: myProfile.username, desc: document.getElementById('videoDesc').value || 'Новое видео!', likes: 0, views: 0, comments: [], src: e.target.result, reposted: false, likedByMe: false, music: `Оригинальный звук - ${myProfile.name}` });
-        saveData(); closeUpload(); switchPage('profile');
+function previewEditAvatar(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+        tempAvatar = ev.target.result;
+        document.getElementById('edit-avatar-preview').innerHTML = `<img src="${tempAvatar}">`;
     };
-    reader.readAsDataURL(selectedFile);
+    r.readAsDataURL(f);
 }
 
-updateProfileUI(); renderFeed();
+function saveProfile() {
+    const newName = document.getElementById('edit-name-input').value.trim();
+    const newUn = document.getElementById('edit-username-input').value.trim().replace(/[^a-zA-Z0-9_.]/g, '');
+    if (!newName || !newUn) return showToast('Имя и @юзернейм не могут быть пустыми!');
+
+    const conflict = usersDB.find(u => u.username.toLowerCase() === newUn.toLowerCase() && u.id !== myProfile.id);
+    if (conflict) return showToast('Этот @юзернейм уже занят другим игроком!');
+
+    const oldUn = myProfile.username;
+    if (oldUn !== newUn) {
+        DB.forEach(v => {
+            if (v.author === oldUn) v.author = newUn;
+            v.comments.forEach(c => { if (c.user === oldUn) c.user = newUn; });
+        });
+        followsDB.forEach(f => {
+            if (f.follower === oldUn) f.follower = newUn;
+            if (f.target === oldUn) f.target = newUn;
+        });
+    }
+
+    myProfile.name = newName;
+    myProfile.username = newUn;
+    myProfile.bio = document.getElementById('edit-bio-input').value.trim();
+    if (tempAvatar) myProfile.photo = tempAvatar;
+
+    saveData();
+    updateProfileUI();
+    showToast('Профиль сохранен ✅');
+    switchPage('profile');
+}
+
+// --- ЗАГРУЗКА НОВОГО ВИДЕО СО ЗВУКОМ ---
+let selectedFile = null;
+
+function openUpload() {
+    document.querySelectorAll('.feed-video').forEach(v => v.pause());
+    document.getElementById('upload-page').classList.add('active');
+    const pv = document.getElementById('previewVideo');
+    pv.pause(); pv.src = ''; pv.style.display = 'none';
+    document.getElementById('uploadIcon').style.display = 'block';
+    document.getElementById('uploadText').style.display = 'block';
+    document.getElementById('videoDesc').value = '';
+    document.getElementById('videoMusic').value = '';
+    selectedFile = null;
+}
+
+function closeUpload() {
+    const pv = document.getElementById('previewVideo');
+    pv.pause(); pv.src = '';
+    document.getElementById('upload-page').classList.remove('active');
+}
+
+function previewFile(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    selectedFile = f;
+    const pv = document.getElementById('previewVideo');
+    pv.src = URL.createObjectURL(f);
+    pv.muted = false;
+    pv.volume = 1.0;
+    pv.style.display = 'block';
+    document.getElementById('uploadIcon').style.display = 'none';
+    document.getElementById('uploadText').style.display = 'none';
+}
+
+function publishVideo() {
+    if (!selectedFile) return showToast('Выберите видеофайл!');
+    const btn = document.getElementById('publishBtn');
+    btn.innerText = 'Сохранение видео...';
+    btn.disabled = true;
+
+    const r = new FileReader();
+    r.onload = ev => {
+        const newVidId = 'vid_' + Date.now();
+        DB.unshift({
+            id: newVidId,
+            author: myProfile.username,
+            desc: document.getElementById('videoDesc').value.trim() || 'Новое видео в #Tikstatus 🔥',
+            music: document.getElementById('videoMusic').value.trim() || `Оригинальный звук — ${myProfile.name}`,
+            likes: 0,
+            likedBy: [],
+            repostedBy: [],
+            bookmarkedBy: [],
+            views: 1,
+            pinned: false,
+            comments: [],
+            src: ev.target.result
+        });
+
+        globalMuted = false; // При публикации сразу активируем звук в ленте
+        saveData();
+        btn.innerText = 'Опубликовать в Tikstatus';
+        btn.disabled = false;
+        closeUpload();
+        switchPage('home');
+        renderFeed(newVidId);
+        showToast('Видео опубликовано со звуком! 🎬');
+    };
+    r.readAsDataURL(selectedFile);
+}
+
+// Старт приложения
+loadAllData();
 </script>
 </body>
 </html>
