@@ -24,16 +24,16 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 
 /* ТОСТ-УВЕДОМЛЕНИЯ */
 #toast-container { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; width: 85%; max-width: 340px; }
-.tikstatus-toast { background: rgba(25, 25, 25, 0.92); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.2s ease; }
+.tikstatus-toast { background: rgba(30, 30, 30, 0.95); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.12); animation: fadeIn 0.2s ease; }
 
-/* СТРАНИЦЫ */
-.page { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; background: #000; z-index: 1; }
+/* СТРАНИЦЫ (ТЕМНАЯ ТЕМА) */
+.page { display: none; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; background: #0e0e0e; color: #fff; z-index: 1; }
 .page.active { display: block; animation: fadeIn 0.2s ease-out; }
 
 /* ЛЕНТА ВИДЕО */
-.feed { height: 100vh; width: 100vw; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+.feed { height: 100vh; width: 100vw; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; background: #000; }
 .feed::-webkit-scrollbar { display: none; }
-.video-container { height: 100vh; width: 100vw; position: relative; scroll-snap-align: start; scroll-snap-stop: always; background: #0e0e0e; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.video-container { height: 100vh; width: 100vw; position: relative; scroll-snap-align: start; scroll-snap-stop: always; background: #000; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 .video-container video { width: 100%; height: 100%; object-fit: cover; }
 .video-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 48%; background: linear-gradient(transparent, rgba(0,0,0,0.85)); pointer-events: none; z-index: 2; }
 
@@ -56,25 +56,25 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .video-info { position: absolute; bottom: 72px; left: 14px; width: 74%; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; }
 .video-info > * { pointer-events: auto; }
 .repost-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 8px; backdrop-filter: blur(4px); }
-.video-author { font-size: 17px; font-weight: 700; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+.video-author { font-size: 17px; font-weight: 700; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; color: #fff; }
 .verified-badge { color: #20d5ec; font-size: 14px; }
-.video-desc { font-size: 14px; line-height: 1.4; margin-bottom: 8px; word-wrap: break-word; }
-.music-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; overflow: hidden; white-space: nowrap; }
+.video-desc { font-size: 14px; line-height: 1.4; margin-bottom: 8px; word-wrap: break-word; color: #f1f1f2; }
+.music-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; overflow: hidden; white-space: nowrap; color: #fff; }
 .music-marquee { display: inline-block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
 
-/* ПРАВАЯ ПАНЕЛЬ КНОПОК (100% TIKTOK) */
+/* ПРАВАЯ ПАНЕЛЬ КНОПОК */
 .side-buttons { position: absolute; right: 8px; bottom: 72px; display: flex; flex-direction: column; align-items: center; gap: 18px; z-index: 10; width: 54px; }
 .author-avatar-wrap { position: relative; width: 48px; height: 48px; margin-bottom: 8px; cursor: pointer; }
-.author-avatar-wrap img, .author-avatar-wrap .avatar-fallback { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; background: #333; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-.follow-plus-badge { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%; background: #fe2c55; color: #fff; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; cursor: pointer; transition: transform 0.2s; }
-.follow-plus-badge.followed { background: #fff; color: #fe2c55; font-size: 12px; }
+.author-avatar-wrap img, .author-avatar-wrap .avatar-fallback { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; background: #222; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; }
+.follow-plus-badge { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%; background: #fe2c55; color: #fff; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 1.5px solid #111; cursor: pointer; transition: transform 0.2s; }
+.follow-plus-badge.followed { background: #222; color: #fe2c55; font-size: 12px; border-color: #fe2c55; }
 
 .btn-wrapper { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
 .btn-icon-svg { width: 34px; height: 34px; fill: #fff; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.45)); transition: transform 0.15s, fill 0.15s; }
 .btn-wrapper:active .btn-icon-svg { transform: scale(0.85); }
 .btn-icon-svg.liked { fill: #fe2c55; animation: heartPop 0.35s ease; }
 .btn-icon-svg.bookmarked { fill: #face15; animation: heartPop 0.35s ease; }
-.btn-text { font-size: 12px; margin-top: 3px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
+.btn-text { font-size: 12px; margin-top: 3px; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,0.9); color: #fff; }
 
 .music-disc { width: 46px; height: 46px; background: radial-gradient(circle, #333 30%, #111 70%); border-radius: 50%; border: 8px solid #222; display: flex; justify-content: center; align-items: center; margin-top: 4px; animation: spin 5s linear infinite; cursor: pointer; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
 .music-disc img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
@@ -86,8 +86,8 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .video-progress-fill { height: 100%; width: 0%; background: #fff; position: relative; }
 
 /* НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ */
-.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 56px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 50; border-top: 0.5px solid rgba(255,255,255,0.15); }
-.nav-item { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 3px; width: 20%; position: relative; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 56px; background: #000; display: flex; justify-content: space-around; align-items: center; z-index: 50; border-top: 1px solid #1f1f1f; }
+.nav-item { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; gap: 3px; width: 20%; position: relative; }
 .nav-item.active { color: #fff; }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 .unread-dot { position: absolute; top: 2px; right: 24%; width: 8px; height: 8px; background: #fe2c55; border-radius: 50%; display: none; }
@@ -96,127 +96,132 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .plus-btn::after { content: ''; position: absolute; right: 0; width: 38px; height: 100%; background: #fe2c55; border-radius: 8px; }
 .plus-btn-inner { position: relative; z-index: 2; width: 36px; height: 100%; background: #fff; color: #000; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; }
 
-/* ПРОФИЛЬ (МОЙ И ЧУЖОЙ) */
-#page-profile, #page-other-profile { background: #fff; color: #000; }
-.profile-top-bar { height: 52px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 17px; border-bottom: 1px solid #f1f1f2; background: #fff; position: sticky; top: 0; z-index: 15; }
+/* ПРОФИЛЬ (ТЕМНАЯ ТЕМА) */
+#page-profile, #page-other-profile { background: #0e0e0e; color: #fff; }
+.profile-top-bar { height: 52px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 17px; border-bottom: 1px solid #1f1f1f; background: #0e0e0e; color: #fff; position: sticky; top: 0; z-index: 15; }
 .profile-scroll-wrap { height: calc(100vh - 108px); overflow-y: auto; }
 .profile-header { padding: 20px 16px 16px; text-align: center; }
-.avatar-large { width: 96px; height: 96px; border-radius: 50%; background: #f1f1f2; margin: 0 auto 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; border: 1px solid #e5e5e5; position: relative; }
+.avatar-large { width: 96px; height: 96px; border-radius: 50%; background: #1f1f1f; margin: 0 auto 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; border: 1px solid #2e2e2e; position: relative; color: #fff; }
 .avatar-large img { width: 100%; height: 100%; object-fit: cover; }
-.profile-name { font-size: 19px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-.profile-username { font-size: 14px; color: #666; margin-bottom: 14px; font-weight: 500; }
+.profile-name { font-size: 19px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 5px; color: #fff; }
+.profile-username { font-size: 14px; color: #999; margin-bottom: 14px; font-weight: 500; }
 .stats { display: flex; justify-content: center; gap: 36px; margin-bottom: 16px; }
-.stats-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: #777; cursor: pointer; }
-.stats-item b { font-size: 17px; color: #111; font-weight: 800; margin-bottom: 2px; }
+.stats-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: #888; cursor: pointer; }
+.stats-item b { font-size: 17px; color: #fff; font-weight: 800; margin-bottom: 2px; }
 .profile-actions { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
-.profile-btn { padding: 10px 22px; border: 1px solid #e3e3e4; border-radius: 6px; font-weight: 600; font-size: 15px; background: #f8f8f8; color: #000; cursor: pointer; }
+.profile-btn { padding: 10px 22px; border: 1px solid #2e2e2e; border-radius: 6px; font-weight: 600; font-size: 15px; background: #1f1f1f; color: #fff; cursor: pointer; }
+.profile-btn:active { background: #2a2a2a; }
 .profile-btn.primary { background: #fe2c55; color: #fff; border-color: #fe2c55; }
-.profile-btn.following { background: #f1f1f2; color: #333; }
-.profile-bio { font-size: 14px; color: #222; padding: 0 24px; line-height: 1.4; white-space: pre-wrap; }
+.profile-btn.following { background: #1f1f1f; color: #aaa; border-color: #333; }
+.profile-bio { font-size: 14px; color: #ddd; padding: 0 24px; line-height: 1.4; white-space: pre-wrap; }
 
-.profile-tabs { display: flex; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8; background: #fff; position: sticky; top: 0; z-index: 10; }
-.profile-tabs .tab { flex: 1; text-align: center; padding: 11px 0; color: #888; font-size: 18px; cursor: pointer; position: relative; }
-.profile-tabs .tab.active { color: #000; }
-.profile-tabs .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 42px; height: 2.5px; background: #000; }
-.profile-video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: #fff; min-height: 260px; padding-bottom: 30px; }
-.grid-item { aspect-ratio: 3/4; background: #1a1a1a; position: relative; cursor: pointer; overflow: hidden; }
+.profile-tabs { display: flex; border-top: 1px solid #1f1f1f; border-bottom: 1px solid #1f1f1f; background: #0e0e0e; position: sticky; top: 0; z-index: 10; }
+.profile-tabs .tab { flex: 1; text-align: center; padding: 11px 0; color: #666; font-size: 18px; cursor: pointer; position: relative; }
+.profile-tabs .tab.active { color: #fff; }
+.profile-tabs .tab.active::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 42px; height: 2.5px; background: #fff; }
+.profile-video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; background: #000; min-height: 260px; padding-bottom: 30px; }
+.grid-item { aspect-ratio: 3/4; background: #161616; position: relative; cursor: pointer; overflow: hidden; }
 .grid-item video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .grid-item .views { position: absolute; bottom: 6px; left: 6px; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.9); }
-.grid-item .pinned-tag { position: absolute; top: 5px; left: 5px; background: #fe2c55; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 3px; }
+.grid-item .pinned-tag { position: absolute; top: 5px; left: 5px; background: #fe2c55; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 3px; z-index: 2; }
 
-.empty-state { grid-column: span 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 55px 20px; text-align: center; }
-.empty-icon { font-size: 44px; color: #ccc; margin-bottom: 12px; }
-.empty-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: #111; }
+.empty-state { grid-column: span 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 55px 20px; text-align: center; background: #0e0e0e; }
+.empty-icon { font-size: 44px; color: #444; margin-bottom: 12px; }
+.empty-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: #eee; }
 .empty-desc { font-size: 13px; color: #777; }
 
 /* ПОИСК И РЕКОМЕНДАЦИИ ЮЗЕРОВ */
 #page-search { background: #0e0e0e; }
-.search-header { display: flex; align-items: center; padding: 14px 15px; gap: 10px; border-bottom: 1px solid #222; }
-.search-input-box { flex: 1; display: flex; align-items: center; background: #222; border-radius: 8px; padding: 0 12px; }
+.search-header { display: flex; align-items: center; padding: 14px 15px; gap: 10px; border-bottom: 1px solid #1f1f1f; }
+.search-input-box { flex: 1; display: flex; align-items: center; background: #1f1f1f; border-radius: 8px; padding: 0 12px; }
 .search-input-box input { flex: 1; padding: 10px 8px; background: transparent; border: none; color: #fff; font-size: 15px; outline: none; }
+.search-section-label { font-size: 12px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.5px; margin: 10px 0 6px; }
 .search-results { padding: 8px 15px 70px; overflow-y: auto; height: calc(100vh - 65px); }
 .user-result { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1a1a1a; cursor: pointer; }
-.user-result-avatar { width: 52px; height: 52px; border-radius: 50%; background: #333; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; }
+.user-result-avatar { width: 52px; height: 52px; border-radius: 50%; background: #222; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; color: #fff; }
 .user-result-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-result-info { flex: 1; }
 .user-result-name { font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
 .user-result-username { font-size: 13px; color: #888; }
 
-/* ВХОДЯЩИЕ И ЧАТ */
-.header-title { height: 52px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; border-bottom: 1px solid #222; }
-.chat-list { overflow-y: auto; height: calc(100vh - 108px); }
+/* ВХОДЯЩИЕ И ЧАТ (ТЕМНАЯ ТЕМА) */
+.header-title { height: 52px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; border-bottom: 1px solid #1f1f1f; background: #0e0e0e; color: #fff; }
+.chat-list { overflow-y: auto; height: calc(100vh - 108px); background: #0e0e0e; }
 .chat-item { display: flex; align-items: center; padding: 14px 16px; cursor: pointer; border-bottom: 1px solid #181818; }
-.chat-avatar { width: 54px; height: 54px; border-radius: 50%; background: #2a2a2a; margin-right: 14px; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; }
+.chat-item:active { background: #161616; }
+.chat-avatar { width: 54px; height: 54px; border-radius: 50%; background: #222; margin-right: 14px; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; color: #fff; }
 .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .chat-info { flex: 1; overflow: hidden; }
-.chat-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.chat-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #fff; }
 .chat-msg { color: #888; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-#page-chat-room { background: #fff; color: #000; z-index: 60; }
-.chat-room-header { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #eee; font-weight: 700; font-size: 16px; background: #fff; }
-.chat-messages { height: calc(100vh - 114px); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f6f6f6; }
+#page-chat-room { background: #0e0e0e; color: #fff; z-index: 60; }
+.chat-room-header { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #1f1f1f; font-weight: 700; font-size: 16px; background: #141414; color: #fff; }
+.chat-messages { height: calc(100vh - 114px); padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0e0e0e; }
 .chat-bubble { max-width: 78%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; word-wrap: break-word; }
 .chat-bubble.sent { align-self: flex-end; background: #fe2c55; color: #fff; border-bottom-right-radius: 4px; }
-.chat-bubble.received { align-self: flex-start; background: #e8e8e9; color: #000; border-bottom-left-radius: 4px; }
-.shared-video-card { background: #111; color: #fff; padding: 10px; border-radius: 12px; margin-top: 5px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); }
-.chat-input-area { height: 60px; padding: 0 12px; background: #fff; border-top: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
-.chat-input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 11px 16px; font-size: 14px; outline: none; }
+.chat-bubble.received { align-self: flex-start; background: #222; color: #fff; border-bottom-left-radius: 4px; }
+.shared-video-card { background: #161616; color: #fff; padding: 10px; border-radius: 12px; margin-top: 6px; display: flex; align-items: center; gap: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.18); }
+.chat-input-area { height: 60px; padding: 0 12px; background: #141414; border-top: 1px solid #1f1f1f; display: flex; align-items: center; gap: 10px; }
+.chat-input-area input { flex: 1; background: #242424; border: none; border-radius: 20px; padding: 11px 16px; font-size: 14px; color: #fff; outline: none; }
+.chat-input-area input::placeholder { color: #777; }
 .chat-input-area button { background: #fe2c55; color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; font-weight: 700; font-size: 16px; cursor: pointer; }
 
-/* МОДАЛКА КОММЕНТАРИЕВ И РЕПОСТОВ */
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.55); z-index: 90; }
+/* МОДАЛКА КОММЕНТАРИЕВ И РЕПОСТОВ (ТЕМНАЯ ТЕМА) */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 90; }
 .modal-overlay.active { display: block; }
-.modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 68vh; background: #fff; color: #000; z-index: 100; transition: bottom 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 14px 14px 0 0; display: flex; flex-direction: column; }
+.modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 68vh; background: #161616; color: #fff; z-index: 100; transition: bottom 0.28s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 14px 14px 0 0; display: flex; flex-direction: column; border-top: 1px solid #262626; }
 .modal.open { bottom: 0; }
-.modal-header { padding: 14px; text-align: center; font-weight: 700; font-size: 15px; position: relative; border-bottom: 1px solid #eee; }
-.close-btn { position: absolute; right: 15px; top: 12px; font-size: 20px; cursor: pointer; color: #444; }
+.modal-header { padding: 14px; text-align: center; font-weight: 700; font-size: 15px; position: relative; border-bottom: 1px solid #262626; color: #fff; }
+.close-btn { position: absolute; right: 15px; top: 12px; font-size: 20px; cursor: pointer; color: #aaa; }
 .comments-list { flex: 1; overflow-y: auto; padding: 14px; }
 .comment-item { margin-bottom: 16px; }
 .comment-main { display: flex; justify-content: space-between; align-items: flex-start; }
 .comment-left { display: flex; gap: 10px; flex: 1; padding-right: 10px; }
-.comment-avatar { width: 34px; height: 34px; border-radius: 50%; background: #eee; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; flex-shrink: 0; }
+.comment-avatar { width: 34px; height: 34px; border-radius: 50%; background: #2a2a2a; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; flex-shrink: 0; color: #fff; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.comment-user { font-size: 12px; color: #666; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-.pinned-badge { background: #f1f1f2; color: #555; font-size: 10px; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+.comment-user { font-size: 12px; color: #999; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.pinned-badge { background: #2a2a2a; color: #ccc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 .author-tag { color: #fe2c55; font-weight: 700; font-size: 11px; }
-.comment-text { font-size: 14px; color: #111; line-height: 1.35; margin-bottom: 5px; }
-.comment-actions { display: flex; gap: 14px; font-size: 12px; color: #888; font-weight: 600; }
+.comment-text { font-size: 14px; color: #f1f1f2; line-height: 1.35; margin-bottom: 5px; }
+.comment-actions { display: flex; gap: 14px; font-size: 12px; color: #777; font-weight: 600; }
 .comment-actions span { cursor: pointer; }
-.comment-like { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 12px; cursor: pointer; min-width: 28px; }
+.comment-like { display: flex; flex-direction: column; align-items: center; color: #777; font-size: 12px; cursor: pointer; min-width: 28px; }
 .comment-like.active { color: #fe2c55; }
-.replies-wrap { margin-left: 44px; margin-top: 8px; border-left: 2px solid #eee; padding-left: 10px; }
-.reply-bar { display: none; background: #f8f8f8; padding: 6px 14px; font-size: 12px; color: #555; justify-content: space-between; align-items: center; border-top: 1px solid #eee; }
+.replies-wrap { margin-left: 44px; margin-top: 8px; border-left: 2px solid #2e2e2e; padding-left: 10px; }
+.reply-bar { display: none; background: #1f1f1f; padding: 6px 14px; font-size: 12px; color: #bbb; justify-content: space-between; align-items: center; border-top: 1px solid #2a2a2a; }
 .reply-bar.active { display: flex; }
-.input-area { padding: 10px 14px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fff; align-items: center; }
-.input-area input { flex: 1; background: #f1f1f2; border: none; border-radius: 20px; padding: 10px 16px; font-size: 14px; outline: none; }
+.input-area { padding: 10px 14px 20px; border-top: 1px solid #262626; display: flex; gap: 10px; background: #161616; align-items: center; }
+.input-area input { flex: 1; background: #262626; border: none; border-radius: 20px; padding: 10px 16px; font-size: 14px; color: #fff; outline: none; }
+.input-area input::placeholder { color: #777; }
 .input-area button { background: #fe2c55; color: #fff; border: none; border-radius: 50%; width: 34px; height: 34px; font-weight: 700; font-size: 16px; cursor: pointer; }
 
 /* ШЕЙР МОДАЛКА */
-#shareModal { height: auto; padding-bottom: 24px; }
-.share-list { display: flex; overflow-x: auto; gap: 16px; padding: 16px; border-bottom: 1px solid #f1f1f2; }
+#shareModal { height: auto; padding-bottom: 24px; background: #161616; }
+.share-list { display: flex; overflow-x: auto; gap: 16px; padding: 16px; border-bottom: 1px solid #262626; }
 .share-actions-row { display: flex; overflow-x: auto; gap: 18px; padding: 16px; }
 .share-item { display: flex; flex-direction: column; align-items: center; min-width: 62px; cursor: pointer; gap: 6px; }
-.share-circle { width: 52px; height: 52px; border-radius: 50%; background: #f1f1f2; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; }
+.share-circle { width: 52px; height: 52px; border-radius: 50%; background: #262626; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; }
 .share-circle img { width: 100%; height: 100%; object-fit: cover; }
-.share-label { font-size: 11px; color: #333; text-align: center; font-weight: 500; max-width: 66px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-label { font-size: 11px; color: #ccc; text-align: center; font-weight: 500; max-width: 66px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* РЕДАКТИРОВАНИЕ И СТУДИЯ ЗАГРУЗКИ */
-#page-edit-profile { background: #fff; color: #000; z-index: 60; }
+#page-edit-profile { background: #0e0e0e; color: #fff; z-index: 60; }
 .edit-form-wrap { padding: 24px 18px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; height: calc(100vh - 54px); }
-.edit-avatar-box { width: 96px; height: 96px; border-radius: 50%; background: #f0f0f0; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; font-size: 38px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid #ddd; }
+.edit-avatar-box { width: 96px; height: 96px; border-radius: 50%; background: #1f1f1f; margin-bottom: 20px; display: flex; justify-content: center; align-items: center; font-size: 38px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid #333; color: #fff; }
 .edit-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-.edit-avatar-box .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.35); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px; }
+.edit-avatar-box .overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); display: flex; justify-content: center; align-items: center; color: #fff; font-size: 22px; }
 .edit-field { width: 100%; margin-bottom: 16px; }
-.edit-field label { display: block; font-size: 12px; color: #666; margin-bottom: 6px; font-weight: 600; }
-.edit-field input, .edit-field textarea { width: 100%; background: #f1f1f2; border: none; border-radius: 8px; padding: 12px 14px; color: #000; font-size: 14px; outline: none; }
+.edit-field label { display: block; font-size: 12px; color: #999; margin-bottom: 6px; font-weight: 600; }
+.edit-field input, .edit-field textarea { width: 100%; background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none; }
 
 #upload-page { display: none; flex-direction: column; height: 100vh; background: #0e0e0e; position: fixed; inset: 0; z-index: 120; }
 #upload-page.active { display: flex; animation: slideUp 0.25s ease; }
 .upload-header { height: 54px; padding: 0 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
 .upload-body { flex: 1; display: flex; flex-direction: column; padding: 16px; overflow-y: auto; }
-.upload-box { width: 100%; height: 42vh; background: #1a1a1a; border: 1.5px dashed #333; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; }
+.upload-box { width: 100%; height: 42vh; background: #161616; border: 1.5px dashed #333; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; overflow: hidden; position: relative; }
 .upload-box video { width: 100%; height: 100%; object-fit: contain; display: none; background: #000; }
-.upload-input { width: 100%; margin-top: 14px; background: #1a1a1a; border: none; border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
+.upload-input { width: 100%; margin-top: 14px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
 .publish-btn { width: 100%; margin-top: auto; padding: 15px; background: #fe2c55; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
 </style>
 </head>
@@ -415,6 +420,8 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 </div>
 
 <script>
+const MIN_FOLLOWERS_FOR_PIN = 25;
+
 // --- УВЕДОМЛЕНИЯ ---
 function showToast(msg) {
     let c = document.getElementById('toast-container');
@@ -423,24 +430,36 @@ function showToast(msg) {
     c.appendChild(t); setTimeout(() => t.remove(), 2600);
 }
 
-// --- СИНХРОНИЗАЦИЯ С TELEGRAM WEBAPP И PYTHON БОТОМ ---
+// --- ПОЛУЧЕНИЕ НЕИЗМЕНЯЕМОГО TELEGRAM ID И ДАННЫХ ИЗ БОТА ---
 const urlParams = new URLSearchParams(window.location.search);
 const botRole = urlParams.get('role') || 'user';
-let tgInfo = { id: 'local_user', username: 'maloy_dev', first_name: 'Maloy', photo_url: '' };
+const urlUid = urlParams.get('uid') || '';
+const urlUn = urlParams.get('un') || '';
+const urlFn = urlParams.get('fn') || '';
+const urlUsersSync = urlParams.get('usync') || '';
+
+let tgInfo = {
+    id: urlUid || localStorage.getItem('tikstatus_fixed_uid') || 'local_user_1',
+    username: (urlUn || 'user').replace(/[^a-zA-Z0-9_.]/g, ''),
+    first_name: urlFn || 'Пользователь',
+    photo_url: ''
+};
 
 if (window.Telegram && window.Telegram.WebApp) {
     const tg = window.Telegram.WebApp;
     tg.expand(); tg.ready();
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
         const u = tg.initDataUnsafe.user;
-        tgInfo.id = String(u.id);
-        tgInfo.username = (u.username || ('user_' + u.id)).replace(/[^a-zA-Z0-9_.]/g, '');
-        tgInfo.first_name = u.first_name || 'Пользователь';
-        tgInfo.photo_url = u.photo_url || '';
+        if (u.id) tgInfo.id = String(u.id);
+        if (u.username) tgInfo.username = u.username.replace(/[^a-zA-Z0-9_.]/g, '');
+        else if (u.first_name && !urlUn) tgInfo.username = u.first_name.replace(/[^a-zA-Z0-9_.]/g, '') || ('user_' + tgInfo.id);
+        if (u.first_name) tgInfo.first_name = u.first_name;
+        if (u.photo_url) tgInfo.photo_url = u.photo_url;
     }
 }
+localStorage.setItem('tikstatus_fixed_uid', tgInfo.id);
 
-// --- БЕЗЛИМИТНАЯ БАЗА ДАННЫХ INDEXED-DB (ДЛЯ БОЛЬШИХ ВИДЕО СО ЗВУКОМ) ---
+// --- БАЗА ДАННЫХ INDEXED-DB ---
 const DB_NAME = 'TikstatusFullDB_v2';
 let idb = null;
 
@@ -476,15 +495,15 @@ function idbSet(key, val) {
 let DB = [];
 let usersDB = [];
 let chatsDB = {};
-let followsDB = []; // [{follower: 'u1', target: 'u2'}]
+let followsDB = [];
 let myProfile = null;
-let globalMuted = true; // Изначально мьют для автоплея, снимается при первом же клике
+let globalMuted = true;
 
 const defaultVideos = [
     {
         id: 'vid_welcome',
         author: 'tiktok_russia',
-        desc: 'Добро пожаловать в 100% Tikstatus! Двойной тап — лайк ❤️ Нажми на экран для звука! #tikstatus #рекомендации',
+        desc: 'Добро пожаловать в Tikstatus! Двойной тап — лайк ❤️ Нажми на экран для звука! #tikstatus #рекомендации',
         likes: 1250,
         likedBy: [],
         repostedBy: [],
@@ -492,7 +511,7 @@ const defaultVideos = [
         views: 4800,
         pinned: false,
         comments: [
-            { id: 'c1', user: 'durov', text: 'Теперь работает на 100% как настоящий ТТ 🔥', likes: 85, likedBy: [], pinned: true, replies: [] }
+            { id: 'c1', user: 'durov', text: 'Темная тема и полный функционал ТТ 🔥', likes: 85, likedBy: [], pinned: true, replies: [] }
         ],
         src: 'https://www.w3schools.com/html/mov_bbb.mp4',
         music: 'Оригинальный звук — TikTok Россия'
@@ -504,42 +523,174 @@ const defaultUsers = [
     { id: 'u_pd', username: 'durov', name: 'Pavel Durov', photo: '', bio: 'Founder of Telegram', verified: true, banned: false }
 ];
 
+// Умное слияние пользователей без потери и дублей
+function mergeUserIntoList(list, userObj) {
+    if (!userObj || !userObj.username) return;
+    const cleanUn = String(userObj.username).trim().replace(/^@/, '');
+    if (!cleanUn) return;
+
+    let existing = null;
+    if (userObj.id && !['u_tt', 'u_pd'].includes(userObj.id)) {
+        existing = list.find(u => u.id && String(u.id) === String(userObj.id));
+    }
+    if (!existing) {
+        existing = list.find(u => u.username.toLowerCase() === cleanUn.toLowerCase());
+    }
+
+    if (existing) {
+        if (userObj.id && !existing.id) existing.id = String(userObj.id);
+        if (userObj.photo && !existing.photo) existing.photo = userObj.photo;
+        if (userObj.bio && (!existing.bio || existing.bio === 'Добавьте описание профиля')) existing.bio = userObj.bio;
+        if (userObj.verified) existing.verified = true;
+        if (typeof userObj.banned === 'boolean') existing.banned = userObj.banned;
+    } else {
+        list.push({
+            id: userObj.id ? String(userObj.id) : ('u_' + cleanUn.toLowerCase()),
+            username: cleanUn,
+            name: userObj.name || cleanUn,
+            photo: userObj.photo || '',
+            bio: userObj.bio || 'Пользователь Tikstatus ✨',
+            verified: Boolean(userObj.verified),
+            banned: Boolean(userObj.banned)
+        });
+    }
+}
+
 async function loadAllData() {
     await initIndexedDB();
-    DB = (await idbGet('videos')) || JSON.parse(localStorage.getItem('ts_vids') || 'null') || defaultVideos;
-    usersDB = (await idbGet('users')) || JSON.parse(localStorage.getItem('ts_users') || 'null') || defaultUsers;
-    chatsDB = (await idbGet('chats')) || JSON.parse(localStorage.getItem('ts_chats') || '{}');
+
+    // 1. Собираем видео из новой и старой баз
+    const idbVids = await idbGet('videos');
+    const lsVidsNew = JSON.parse(localStorage.getItem('ts_vids') || 'null');
+    const lsVidsOld = JSON.parse(localStorage.getItem('tiktok_DB') || 'null');
+    DB = idbVids || lsVidsNew || lsVidsOld || defaultVideos;
+
+    // Если в старой базе tiktok_DB остались видео, которых нет в DB — добавляем их
+    if (Array.isArray(lsVidsOld)) {
+        lsVidsOld.forEach(oldV => {
+            if (oldV && oldV.id && !DB.some(v => v.id === oldV.id)) {
+                DB.push(oldV);
+            }
+        });
+    }
+
+    // 2. Собираем пользователей из ВСЕХ источников (IndexedDB + старый localStorage + новый localStorage + Python-бот)
+    let combinedUsers = [...defaultUsers];
+    const idbUsers = await idbGet('users');
+    const lsUsersNew = JSON.parse(localStorage.getItem('ts_users') || '[]');
+    const lsUsersOld = JSON.parse(localStorage.getItem('tiktok_usersDB') || '[]');
+    const lsOldMyProfile = JSON.parse(localStorage.getItem('tiktok_myProfile') || 'null');
+    const lsBoundProfile = JSON.parse(localStorage.getItem('tikstatus_bound_profile_' + tgInfo.id) || 'null');
+
+    if (Array.isArray(idbUsers)) idbUsers.forEach(u => mergeUserIntoList(combinedUsers, u));
+    if (Array.isArray(lsUsersNew)) lsUsersNew.forEach(u => mergeUserIntoList(combinedUsers, u));
+    if (Array.isArray(lsUsersOld)) lsUsersOld.forEach(u => mergeUserIntoList(combinedUsers, u));
+    if (lsOldMyProfile) mergeUserIntoList(combinedUsers, { ...lsOldMyProfile, id: tgInfo.id });
+    if (lsBoundProfile) mergeUserIntoList(combinedUsers, { ...lsBoundProfile, id: tgInfo.id });
+
+    // Подтягиваем пользователей, синхронизированных из Python-бота (?usync=...)
+    if (urlUsersSync) {
+        try {
+            const decoded = JSON.parse(decodeURIComponent(escape(atob(urlUsersSync))));
+            if (Array.isArray(decoded)) {
+                decoded.forEach(item => {
+                    // формат: [id, username, name, verified, banned]
+                    mergeUserIntoList(combinedUsers, {
+                        id: String(item[0]),
+                        username: item[1],
+                        name: item[2],
+                        verified: Boolean(item[3]),
+                        banned: Boolean(item[4])
+                    });
+                });
+            }
+        } catch (e) {}
+    }
+
+    // Также добавляем всех авторов видео и комментариев, если их вдруг нет в списке пользователей
+    DB.forEach(v => {
+        if (v.author) mergeUserIntoList(combinedUsers, { username: v.author, name: v.author });
+        if (Array.isArray(v.comments)) {
+            v.comments.forEach(c => {
+                if (c.user) mergeUserIntoList(combinedUsers, { username: c.user, name: c.user, photo: c.photo || '' });
+            });
+        }
+    });
+
+    usersDB = combinedUsers;
+    chatsDB = (await idbGet('chats')) || JSON.parse(localStorage.getItem('ts_chats') || localStorage.getItem('tiktok_chatsDB') || '{}');
     followsDB = (await idbGet('follows')) || JSON.parse(localStorage.getItem('ts_follows') || '[]');
 
-    // Строгая изоляция профиля по уникальному ID из Telegram
-    myProfile = usersDB.find(u => u.id === tgInfo.id || u.username.toLowerCase() === tgInfo.username.toLowerCase());
+    // 3. ВОССТАНОВЛЕНИЕ И ПРИВЯЗКА ТВОЕГО АККАУНТА ПО TELEGRAM ID
+    // Если раньше создался дубликат с ТГ-ником, а твой измененный аккаунт остался рядом — находим измененный!
+    let byId = usersDB.find(u => String(u.id) === String(tgInfo.id));
+    const savedCustomUn = localStorage.getItem('tikstatus_custom_un_' + tgInfo.id);
+
+    if (savedCustomUn) {
+        const customAcc = usersDB.find(u => u.username.toLowerCase() === savedCustomUn.toLowerCase());
+        if (customAcc) {
+            customAcc.id = String(tgInfo.id);
+            byId = customAcc;
+            // Удаляем пустой дубликат со старым ТГ-ником, если он создался случайно
+            if (tgInfo.username.toLowerCase() !== savedCustomUn.toLowerCase()) {
+                const dupIdx = usersDB.findIndex(u => u !== customAcc && u.username.toLowerCase() === tgInfo.username.toLowerCase() && !DB.some(v => v.author === u.username));
+                if (dupIdx > -1) usersDB.splice(dupIdx, 1);
+            }
+        }
+    } else {
+        // Проверяем, нет ли на устройстве кастомного аккаунта с видео (от прошлой сессии), когда создался пустой дубль с ТГ-ником
+        const customCandidates = usersDB.filter(u => !['tiktok_russia', 'durov'].includes(u.username) && u.username.toLowerCase() !== tgInfo.username.toLowerCase());
+        const tgNickAcc = usersDB.find(u => u.username.toLowerCase() === tgInfo.username.toLowerCase());
+        const tgNickHasVids = tgNickAcc ? DB.some(v => v.author === tgNickAcc.username) : false;
+
+        if (customCandidates.length === 1 && !tgNickHasVids) {
+            const recovered = customCandidates[0];
+            recovered.id = String(tgInfo.id);
+            localStorage.setItem('tikstatus_custom_un_' + tgInfo.id, recovered.username);
+            byId = recovered;
+            if (tgNickAcc && tgNickAcc !== recovered) {
+                usersDB = usersDB.filter(u => u !== tgNickAcc);
+            }
+        }
+    }
+
+    myProfile = byId || usersDB.find(u => u.username.toLowerCase() === tgInfo.username.toLowerCase());
+
     if (!myProfile) {
         myProfile = {
-            id: tgInfo.id,
+            id: String(tgInfo.id),
             username: tgInfo.username,
             name: tgInfo.first_name,
             photo: tgInfo.photo_url,
             bio: 'Добро пожаловать в мой профиль Tikstatus ✨',
-            verified: botRole === 'owner',
+            verified: botRole === 'owner' || botRole === 'vip',
             banned: false
         };
         usersDB.push(myProfile);
     } else {
+        myProfile.id = String(tgInfo.id);
         if (tgInfo.photo_url && !myProfile.photo) myProfile.photo = tgInfo.photo_url;
-        if (botRole === 'owner') myProfile.verified = true;
+        if (botRole === 'owner' || botRole === 'vip') myProfile.verified = true;
     }
+
+    localStorage.setItem('tikstatus_bound_profile_' + tgInfo.id, JSON.stringify(myProfile));
     saveData();
     updateProfileUI();
     renderFeed();
 }
 
 function saveData() {
+    if (myProfile) {
+        localStorage.setItem('tikstatus_bound_profile_' + tgInfo.id, JSON.stringify(myProfile));
+        localStorage.setItem('tikstatus_custom_un_' + tgInfo.id, myProfile.username);
+    }
     idbSet('videos', DB);
     idbSet('users', usersDB);
     idbSet('chats', chatsDB);
     idbSet('follows', followsDB);
     try {
         localStorage.setItem('ts_users', JSON.stringify(usersDB));
+        localStorage.setItem('tiktok_usersDB', JSON.stringify(usersDB));
         localStorage.setItem('ts_follows', JSON.stringify(followsDB));
     } catch(e) {}
 }
@@ -551,7 +702,7 @@ function formatNumber(n) {
     return String(n);
 }
 
-// --- УПРАВЛЕНИЕ ЗВУКОМ (100% РАБОЧИЙ ФИКС) ---
+// --- УПРАВЛЕНИЕ ЗВУКОМ ---
 function updateSoundPillUI() {
     const pill = document.getElementById('soundTogglePill');
     if (!pill) return;
@@ -592,7 +743,6 @@ function switchPage(page) {
     if (!['edit-profile', 'other-profile', 'chat-room'].includes(currentPage)) lastPage = currentPage;
     currentPage = page;
 
-    // Ставим видео на паузу при уходе с главной
     if (page !== 'home') {
         document.querySelectorAll('.feed-video').forEach(v => v.pause());
     }
@@ -631,7 +781,7 @@ function renderFeed(scrollToVideoId = null) {
         div.className = 'video-container';
         div.id = 'feed-item-' + v.id;
 
-        const authorObj = usersDB.find(u => u.username === v.author) || { name: v.author, photo: '', verified: false };
+        const authorObj = usersDB.find(u => u.username.toLowerCase() === v.author.toLowerCase()) || { name: v.author, photo: '', verified: false };
         const isLiked = v.likedBy.includes(myProfile.username);
         const isBookmarked = v.bookmarkedBy.includes(myProfile.username);
         const isFollowingAuthor = followsDB.some(f => f.follower === myProfile.username && f.target === v.author);
@@ -696,7 +846,6 @@ function renderFeed(scrollToVideoId = null) {
             </div>
         `;
 
-        // Обработка одинарного (пауза + звук) и двойного тапа (лайк с сердечком)
         const vidEl = div.querySelector('video');
         let lastTap = 0;
         let singleTapTimer = null;
@@ -779,7 +928,6 @@ function observeVideos() {
                 vid.muted = globalMuted;
                 vid.volume = 1.0;
                 vid.play().catch(() => {
-                    // Если мобильный браузер заблокировал автоплей со звуком — запускаем без звука
                     globalMuted = true;
                     vid.muted = true;
                     updateSoundPillUI();
@@ -868,10 +1016,15 @@ let currentOtherProfileTab = 'videos';
 let currentOtherUser = null;
 
 function getStatsForUser(username) {
-    const following = followsDB.filter(f => f.follower === username).length;
-    const followers = followsDB.filter(f => f.target === username).length;
-    const likes = DB.filter(v => v.author === username).reduce((s, v) => s + (v.likes || 0), 0);
+    const un = (username || '').toLowerCase();
+    const following = followsDB.filter(f => (f.follower || '').toLowerCase() === un).length;
+    const followers = followsDB.filter(f => (f.target || '').toLowerCase() === un).length;
+    const likes = DB.filter(v => (v.author || '').toLowerCase() === un).reduce((s, v) => s + (v.likes || 0), 0);
     return { following, followers, likes };
+}
+
+function canUserPin(username) {
+    return getStatsForUser(username).followers >= MIN_FOLLOWERS_FOR_PIN;
 }
 
 function updateProfileUI() {
@@ -894,7 +1047,7 @@ function switchProfileTab(tab) {
 
     let list = [];
     if (tab === 'videos') {
-        list = DB.filter(v => v.author === myProfile.username).sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+        list = DB.filter(v => v.author.toLowerCase() === myProfile.username.toLowerCase()).sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
     } else if (tab === 'reposts') {
         list = DB.filter(v => (v.repostedBy || []).includes(myProfile.username));
     } else if (tab === 'favorites') {
@@ -905,8 +1058,8 @@ function switchProfileTab(tab) {
 
 function openOtherProfile(username) {
     closeModals();
-    if (username === myProfile.username) return switchPage('profile');
-    currentOtherUser = usersDB.find(u => u.username === username) || { username, name: username, photo: '', bio: 'Пользователь Tikstatus', verified: false };
+    if (username.toLowerCase() === myProfile.username.toLowerCase()) return switchPage('profile');
+    currentOtherUser = usersDB.find(u => u.username.toLowerCase() === username.toLowerCase()) || { username, name: username, photo: '', bio: 'Пользователь Tikstatus', verified: false };
 
     document.getElementById('other-profile-top-name').innerText = currentOtherUser.name;
     document.getElementById('other-profile-name').innerHTML = `${currentOtherUser.name} ${currentOtherUser.verified ? '<span class="verified-badge">✔</span>' : ''}`;
@@ -944,7 +1097,7 @@ function switchOtherProfileTab(tab) {
     document.getElementById('tab-other-' + tab).classList.add('active');
 
     let list = [];
-    if (tab === 'videos') list = DB.filter(v => v.author === currentOtherUser.username).sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+    if (tab === 'videos') list = DB.filter(v => v.author.toLowerCase() === currentOtherUser.username.toLowerCase()).sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
     else list = DB.filter(v => (v.repostedBy || []).includes(currentOtherUser.username));
     renderVideoGrid('other-profile-video-grid', list, 'Ни одного видео пока нет.');
 }
@@ -975,7 +1128,7 @@ function shareMyProfile() {
     showToast('Tikstatus: Ссылка на профиль @' + myProfile.username + ' скопирована!');
 }
 
-// --- КОММЕНТАРИИ (ЛАЙКИ, ОТВЕТЫ, ЗАКРЕП) ---
+// --- КОММЕНТАРИИ ---
 let currentVid = null;
 let replyToIndex = null;
 
@@ -995,16 +1148,15 @@ function renderCommentsList(v) {
     const cntEl = document.getElementById('comment-count-' + v.id);
     if (cntEl) cntEl.innerText = formatNumber(total);
 
-    // Сортируем: закрепленные всегда сверху
     v.comments.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
-    const canPin = v.author === myProfile.username || botRole === 'owner';
+    const isVideoOwner = v.author.toLowerCase() === myProfile.username.toLowerCase();
 
     document.getElementById('commentsList').innerHTML = v.comments.map((c, idx) => {
         if (!c.likedBy) c.likedBy = [];
         if (!c.replies) c.replies = [];
         const isLiked = c.likedBy.includes(myProfile.username);
-        const uObj = usersDB.find(u => u.username === c.user) || { photo: '' };
+        const uObj = usersDB.find(u => u.username.toLowerCase() === c.user.toLowerCase()) || { photo: '' };
 
         return `
         <div class="comment-item">
@@ -1014,13 +1166,13 @@ function renderCommentsList(v) {
                     <div style="flex:1;">
                         <div class="comment-user" onclick="openOtherProfile('${c.user}')">
                             @${c.user}
-                            ${c.user === v.author ? '<span class="author-tag">• Автор</span>' : ''}
+                            ${c.user.toLowerCase() === v.author.toLowerCase() ? '<span class="author-tag">• Автор</span>' : ''}
                             ${c.pinned ? '<span class="pinned-badge">📌 Закреплено</span>' : ''}
                         </div>
                         <div class="comment-text">${c.text}</div>
                         <div class="comment-actions">
                             <span onclick="startReply(${idx}, '${c.user}')">Ответить</span>
-                            ${canPin ? `<span onclick="togglePinComment(${idx})">${c.pinned ? 'Открепить' : '📌 Закрепить'}</span>` : ''}
+                            ${isVideoOwner ? `<span onclick="togglePinComment(${idx})">${c.pinned ? 'Открепить' : '📌 Закрепить'}</span>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1030,8 +1182,8 @@ function renderCommentsList(v) {
                 </div>
             </div>
             ${c.replies.length ? `<div class="replies-wrap">${c.replies.map(r => `
-                <div style="margin-top:8px;font-size:13px;">
-                    <b onclick="openOtherProfile('${r.user}')" style="color:#555;cursor:pointer;">@${r.user}:</b> ${r.text}
+                <div style="margin-top:8px;font-size:13px;color:#ddd;">
+                    <b onclick="openOtherProfile('${r.user}')" style="color:#999;cursor:pointer;">@${r.user}:</b> ${r.text}
                 </div>
             `).join('')}</div>` : ''}
         </div>`;
@@ -1052,6 +1204,10 @@ function cancelReply() {
 
 function togglePinComment(idx) {
     const v = DB.find(x => x.id === currentVid);
+    if (!v.comments[idx].pinned && !canUserPin(myProfile.username)) {
+        const myFollowers = getStatsForUser(myProfile.username).followers;
+        return showToast(`Tikstatus: Закреп доступен от ${MIN_FOLLOWERS_FOR_PIN} подписчиков! (У вас: ${myFollowers})`);
+    }
     v.comments[idx].pinned = !v.comments[idx].pinned;
     saveData();
     renderCommentsList(v);
@@ -1098,7 +1254,7 @@ let shareVideoId = null;
 function openShare(id) {
     shareVideoId = id;
     const v = DB.find(x => x.id === id);
-    const friends = usersDB.filter(u => u.username !== myProfile.username);
+    const friends = usersDB.filter(u => u.username.toLowerCase() !== myProfile.username.toLowerCase() && !u.banned);
 
     document.getElementById('shareList').innerHTML = friends.length ? friends.map(u => `
         <div class="share-item" onclick="sendVideoToUser('${u.username}')">
@@ -1108,7 +1264,7 @@ function openShare(id) {
     `).join('') : '<div style="font-size:13px;color:#888;">Нет других пользователей</div>';
 
     const isReposted = (v.repostedBy || []).includes(myProfile.username);
-    const isMyVid = v.author === myProfile.username || botRole === 'owner';
+    const isMyVid = v.author.toLowerCase() === myProfile.username.toLowerCase();
 
     document.getElementById('shareActionsRow').innerHTML = `
         <div class="share-item" onclick="doRepost()">
@@ -1155,6 +1311,11 @@ function copyVidLink() {
 
 function togglePinVideo(id) {
     const v = DB.find(x => x.id === id);
+    if (!v.pinned && !canUserPin(myProfile.username)) {
+        closeModals();
+        const myFollowers = getStatsForUser(myProfile.username).followers;
+        return showToast(`Tikstatus: Закреп доступен от ${MIN_FOLLOWERS_FOR_PIN} подписчиков! (У вас: ${myFollowers})`);
+    }
     v.pinned = !v.pinned;
     saveData(); closeModals();
     showToast(v.pinned ? 'Видео закреплено в профиле 📌' : 'Видео откреплено');
@@ -1169,7 +1330,7 @@ function deleteVideo(id) {
 
 function sendVideoToUser(username) {
     const v = DB.find(x => x.id === shareVideoId);
-    const key = [myProfile.username, username].sort().join('__');
+    const key = [myProfile.username.toLowerCase(), username.toLowerCase()].sort().join('__');
     if (!chatsDB[key]) chatsDB[key] = [];
     chatsDB[key].push({
         sender: myProfile.username,
@@ -1180,32 +1341,47 @@ function sendVideoToUser(username) {
     showToast('Видео отправлено пользователю @' + username + ' ✈️');
 }
 
-// --- ПОИСК ---
+// --- ПОИСК (ПОКАЗЫВАЕТ ВСЕ НОВЫЕ АККАУНТЫ СРАЗУ И ПРИ ПОИСКЕ) ---
 function handleSearch(query) {
-    const q = (query || '').trim().toLowerCase().replace('@', '');
-    const list = q ? usersDB.filter(u => u.username.toLowerCase().includes(q) || u.name.toLowerCase().includes(q)) : usersDB;
+    const q = (query || '').trim().toLowerCase().replace(/^@/, '');
+    const activeUsers = usersDB.filter(u => !u.banned);
 
-    document.getElementById('search-results').innerHTML = list.length ? list.map(u => `
+    // Сортируем так, чтобы реальные и новые аккаунты шли первыми
+    const sortedUsers = [...activeUsers].reverse();
+    const list = q
+        ? sortedUsers.filter(u => u.username.toLowerCase().includes(q) || (u.name || '').toLowerCase().includes(q))
+        : sortedUsers;
+
+    const headerLabel = q
+        ? `<div class="search-section-label">Результаты поиска (${list.length})</div>`
+        : `<div class="search-section-label">Все аккаунты Tikstatus (${list.length})</div>`;
+
+    document.getElementById('search-results').innerHTML = list.length ? (headerLabel + list.map(u => {
+        const vidsCount = DB.filter(v => v.author.toLowerCase() === u.username.toLowerCase()).length;
+        return `
         <div class="user-result" onclick="openOtherProfile('${u.username}')">
             <div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
             <div class="user-result-info">
-                <div class="user-result-name">${u.name} ${u.verified ? '<span class="verified-badge">✔</span>' : ''}</div>
-                <div class="user-result-username">@${u.username} • ${formatNumber(getStatsForUser(u.username).followers)} подписчиков</div>
+                <div class="user-result-name">
+                    ${u.name} ${u.verified ? '<span class="verified-badge">✔</span>' : ''}
+                    ${u.id === myProfile.id ? '<span style="font-size:11px;color:#fe2c55;margin-left:4px;">(Вы)</span>' : ''}
+                </div>
+                <div class="user-result-username">@${u.username} • ${formatNumber(getStatsForUser(u.username).followers)} подписчиков • ${vidsCount} видео</div>
             </div>
-        </div>
-    `).join('') : '<div style="text-align:center;color:#666;margin-top:40px;">Пользователи не найдены</div>';
+        </div>`;
+    }).join('')) : '<div style="text-align:center;color:#666;margin-top:40px;">Аккаунты по запросу не найдены</div>';
 }
 
 function clearSearch() { document.getElementById('searchInput').value = ''; handleSearch(''); }
 
-// --- ВХОДЯЩИЕ И ЧАТЫ ---
+// --- ВХОДЯЩИЕ И ЧАТЫ (БЕЗ АВТООТВЕТА) ---
 let activeChatUser = null;
 
-function getChatKey(u1, u2) { return [u1, u2].sort().join('__'); }
+function getChatKey(u1, u2) { return [(u1||'').toLowerCase(), (u2||'').toLowerCase()].sort().join('__'); }
 
 function renderChatList() {
     const list = document.getElementById('chat-list-container');
-    const others = usersDB.filter(u => u.username !== myProfile.username);
+    const others = usersDB.filter(u => u.username.toLowerCase() !== myProfile.username.toLowerCase() && !u.banned);
     list.innerHTML = others.map(u => {
         const h = chatsDB[getChatKey(myProfile.username, u.username)] || [];
         const last = h.length ? h[h.length - 1].text : 'Нажмите, чтобы написать сообщение';
@@ -1221,7 +1397,7 @@ function renderChatList() {
 }
 
 function openChat(username) {
-    activeChatUser = usersDB.find(u => u.username === username) || { username, name: username, photo: '' };
+    activeChatUser = usersDB.find(u => u.username.toLowerCase() === username.toLowerCase()) || { username, name: username, photo: '' };
     document.getElementById('chat-room-name').innerText = activeChatUser.name;
     renderChatMessages();
     switchPage('chat-room');
@@ -1233,7 +1409,7 @@ function renderChatMessages() {
     const c = document.getElementById('chat-messages-container');
     const history = chatsDB[getChatKey(myProfile.username, activeChatUser.username)] || [];
     c.innerHTML = history.map(m => `
-        <div class="chat-bubble ${m.sender === myProfile.username ? 'sent' : 'received'}">
+        <div class="chat-bubble ${m.sender.toLowerCase() === myProfile.username.toLowerCase() ? 'sent' : 'received'}">
             <div>${m.text}</div>
             ${m.vidId ? `<div class="shared-video-card" onclick="watchVideoFromGrid('${m.vidId}')">🎬 <span>Смотреть видео в ленте</span></div>` : ''}
         </div>
@@ -1253,7 +1429,7 @@ function sendChatMessage() {
     renderChatMessages();
 }
 
-// --- РЕДАКТИРОВАНИЕ ПРОФИЛЯ ---
+// --- РЕДАКТИРОВАНИЕ ПРОФИЛЯ (НАМЕРТВО ПРИВЯЗАНО К ID) ---
 let tempAvatar = null;
 
 function openEditProfile() {
@@ -1281,21 +1457,22 @@ function saveProfile() {
     const newUn = document.getElementById('edit-username-input').value.trim().replace(/[^a-zA-Z0-9_.]/g, '');
     if (!newName || !newUn) return showToast('Имя и @юзернейм не могут быть пустыми!');
 
-    const conflict = usersDB.find(u => u.username.toLowerCase() === newUn.toLowerCase() && u.id !== myProfile.id);
-    if (conflict) return showToast('Этот @юзернейм уже занят другим игроком!');
+    const conflict = usersDB.find(u => u.username.toLowerCase() === newUn.toLowerCase() && String(u.id) !== String(myProfile.id));
+    if (conflict) return showToast('Этот @юзернейм уже занят другим аккаунтом!');
 
     const oldUn = myProfile.username;
-    if (oldUn !== newUn) {
+    if (oldUn.toLowerCase() !== newUn.toLowerCase()) {
         DB.forEach(v => {
-            if (v.author === oldUn) v.author = newUn;
-            v.comments.forEach(c => { if (c.user === oldUn) c.user = newUn; });
+            if (v.author.toLowerCase() === oldUn.toLowerCase()) v.author = newUn;
+            v.comments.forEach(c => { if (c.user.toLowerCase() === oldUn.toLowerCase()) c.user = newUn; });
         });
         followsDB.forEach(f => {
-            if (f.follower === oldUn) f.follower = newUn;
-            if (f.target === oldUn) f.target = newUn;
+            if (f.follower.toLowerCase() === oldUn.toLowerCase()) f.follower = newUn;
+            if (f.target.toLowerCase() === oldUn.toLowerCase()) f.target = newUn;
         });
     }
 
+    myProfile.id = String(tgInfo.id); // Жесткая фиксация ID
     myProfile.name = newName;
     myProfile.username = newUn;
     myProfile.bio = document.getElementById('edit-bio-input').value.trim();
@@ -1303,7 +1480,7 @@ function saveProfile() {
 
     saveData();
     updateProfileUI();
-    showToast('Профиль сохранен ✅');
+    showToast('Профиль сохранен и закреплен за вами ✅');
     switchPage('profile');
 }
 
@@ -1365,7 +1542,7 @@ function publishVideo() {
             src: ev.target.result
         });
 
-        globalMuted = false; // При публикации сразу активируем звук в ленте
+        globalMuted = false;
         saveData();
         btn.innerText = 'Опубликовать в Tikstatus';
         btn.disabled = false;
