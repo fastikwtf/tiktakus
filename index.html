@@ -22,6 +22,22 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
     100% { transform: translate(-50%, -180%) scale(1.5) rotate(0deg); opacity: 0; }
 }
 
+/* ФИРМЕННАЯ ГАЛОЧКА TIKTOK (ТОЛЬКО ДЛЯ VIP) */
+.tt-verified {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+    margin-left: 4px;
+    transform: translateY(-1px);
+}
+.tt-verified-sm {
+    width: 13px;
+    height: 13px;
+    margin-left: 3px;
+}
+
 /* ТОСТ-УВЕДОМЛЕНИЯ */
 #toast-container { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; width: 85%; max-width: 340px; }
 .tikstatus-toast { background: rgba(30, 30, 30, 0.95); color: #fff; padding: 12px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; backdrop-filter: blur(8px); box-shadow: 0 4px 16px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.12); animation: fadeIn 0.2s ease; }
@@ -56,8 +72,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .video-info { position: absolute; bottom: 72px; left: 14px; width: 74%; z-index: 10; text-shadow: 0 1px 3px rgba(0,0,0,0.8); pointer-events: none; }
 .video-info > * { pointer-events: auto; }
 .repost-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.18); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 8px; backdrop-filter: blur(4px); }
-.video-author { font-size: 17px; font-weight: 700; margin-bottom: 6px; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; color: #fff; }
-.verified-badge { color: #20d5ec; font-size: 14px; }
+.video-author { font-size: 17px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; cursor: pointer; color: #fff; }
 .video-desc { font-size: 14px; line-height: 1.4; margin-bottom: 8px; word-wrap: break-word; color: #f1f1f2; }
 .music-row { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; overflow: hidden; white-space: nowrap; color: #fff; }
 .music-marquee { display: inline-block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
@@ -103,16 +118,18 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .profile-header { padding: 20px 16px 16px; text-align: center; }
 .avatar-large { width: 96px; height: 96px; border-radius: 50%; background: #1f1f1f; margin: 0 auto 12px; display: flex; justify-content: center; align-items: center; font-size: 40px; overflow: hidden; border: 1px solid #2e2e2e; position: relative; color: #fff; }
 .avatar-large img { width: 100%; height: 100%; object-fit: cover; }
-.profile-name { font-size: 19px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 5px; color: #fff; }
-.profile-username { font-size: 14px; color: #999; margin-bottom: 14px; font-weight: 500; }
+.profile-name { font-size: 19px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; color: #fff; }
+.profile-username { font-size: 14px; color: #999; margin-bottom: 14px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+.vip-pill-tag { background: rgba(32, 213, 236, 0.15); border: 1px solid #20d5ec; color: #20d5ec; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin-left: 6px; letter-spacing: 0.4px; }
 .stats { display: flex; justify-content: center; gap: 36px; margin-bottom: 16px; }
 .stats-item { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: #888; cursor: pointer; }
 .stats-item b { font-size: 17px; color: #fff; font-weight: 800; margin-bottom: 2px; }
-.profile-actions { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
-.profile-btn { padding: 10px 22px; border: 1px solid #2e2e2e; border-radius: 6px; font-weight: 600; font-size: 15px; background: #1f1f1f; color: #fff; cursor: pointer; }
+.profile-actions { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.profile-btn { padding: 10px 18px; border: 1px solid #2e2e2e; border-radius: 6px; font-weight: 600; font-size: 14px; background: #1f1f1f; color: #fff; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
 .profile-btn:active { background: #2a2a2a; }
 .profile-btn.primary { background: #fe2c55; color: #fff; border-color: #fe2c55; }
 .profile-btn.following { background: #1f1f1f; color: #aaa; border-color: #333; }
+.profile-btn.verify-active { background: rgba(32, 213, 236, 0.15); border-color: #20d5ec; color: #20d5ec; }
 .profile-bio { font-size: 14px; color: #ddd; padding: 0 24px; line-height: 1.4; white-space: pre-wrap; }
 
 .profile-tabs { display: flex; border-top: 1px solid #1f1f1f; border-bottom: 1px solid #1f1f1f; background: #0e0e0e; position: sticky; top: 0; z-index: 10; }
@@ -141,7 +158,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .user-result-avatar { width: 52px; height: 52px; border-radius: 50%; background: #222; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; color: #fff; }
 .user-result-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .user-result-info { flex: 1; }
-.user-result-name { font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+.user-result-name { font-weight: 700; font-size: 15px; color: #fff; margin-bottom: 2px; display: flex; align-items: center; }
 .user-result-username { font-size: 13px; color: #888; }
 
 /* ВХОДЯЩИЕ И ЧАТ (ТЕМНАЯ ТЕМА) */
@@ -152,7 +169,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .chat-avatar { width: 54px; height: 54px; border-radius: 50%; background: #222; margin-right: 14px; display: flex; justify-content: center; align-items: center; font-size: 22px; overflow: hidden; flex-shrink: 0; color: #fff; }
 .chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .chat-info { flex: 1; overflow: hidden; }
-.chat-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #fff; }
+.chat-name { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: #fff; display: flex; align-items: center; }
 .chat-msg { color: #888; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 #page-chat-room { background: #0e0e0e; color: #fff; z-index: 60; }
@@ -180,7 +197,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .comment-left { display: flex; gap: 10px; flex: 1; padding-right: 10px; }
 .comment-avatar { width: 34px; height: 34px; border-radius: 50%; background: #2a2a2a; display: flex; justify-content: center; align-items: center; overflow: hidden; cursor: pointer; flex-shrink: 0; color: #fff; }
 .comment-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.comment-user { font-size: 12px; color: #999; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+.comment-user { font-size: 12px; color: #999; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; cursor: pointer; }
 .pinned-badge { background: #2a2a2a; color: #ccc; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
 .author-tag { color: #fe2c55; font-weight: 700; font-size: 11px; }
 .comment-text { font-size: 14px; color: #f1f1f2; line-height: 1.35; margin-bottom: 5px; }
@@ -214,6 +231,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 .edit-field { width: 100%; margin-bottom: 16px; }
 .edit-field label { display: block; font-size: 12px; color: #999; margin-bottom: 6px; font-weight: 600; }
 .edit-field input, .edit-field textarea { width: 100%; background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; outline: none; }
+.vip-status-info { width: 100%; background: #161616; border: 1px solid #262626; border-radius: 8px; padding: 12px 14px; font-size: 13px; color: #aaa; display: flex; align-items: center; justify-content: space-between; }
 
 #upload-page { display: none; flex-direction: column; height: 100vh; background: #0e0e0e; position: fixed; inset: 0; z-index: 120; }
 #upload-page.active { display: flex; animation: slideUp 0.25s ease; }
@@ -264,7 +282,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 <div id="page-chat-room" class="page">
     <div class="chat-room-header">
         <span onclick="switchPage('chats')" style="cursor:pointer;font-size:22px;">←</span>
-        <span id="chat-room-name" onclick="openOtherProfile(activeChatUser.username)" style="cursor:pointer;">Имя</span>
+        <span id="chat-room-name" onclick="openOtherProfile(activeChatUser.username)" style="cursor:pointer;display:flex;align-items:center;">Имя</span>
         <span style="width:24px;"></span>
     </div>
     <div class="chat-messages" id="chat-messages-container"></div>
@@ -278,13 +296,13 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 <div id="page-profile" class="page">
     <div class="profile-top-bar">
         <span style="width:28px;"></span>
-        <span id="profile-top-name">Профиль</span>
+        <span id="profile-top-name" style="display:flex;align-items:center;">Профиль</span>
         <span onclick="openUpload()" style="cursor:pointer;font-size:22px;">＋</span>
     </div>
     <div class="profile-scroll-wrap">
         <div class="profile-header">
             <div class="avatar-large" id="profile-avatar">👤</div>
-            <div class="profile-name"><span id="profile-name">Имя</span></div>
+            <div class="profile-name" id="profile-name">Имя</div>
             <div class="profile-username" id="profile-username">@username</div>
             <div class="stats">
                 <div class="stats-item"><b id="profile-following">0</b>Подписки</div>
@@ -310,13 +328,13 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 <div id="page-other-profile" class="page">
     <div class="profile-top-bar">
         <span onclick="switchPage(lastPage || 'home')" style="cursor:pointer;font-size:22px;">←</span>
-        <span id="other-profile-top-name">Профиль</span>
+        <span id="other-profile-top-name" style="display:flex;align-items:center;">Профиль</span>
         <span style="width:24px;"></span>
     </div>
     <div class="profile-scroll-wrap">
         <div class="profile-header">
             <div class="avatar-large" id="other-profile-avatar">👤</div>
-            <div class="profile-name"><span id="other-profile-name">Имя</span></div>
+            <div class="profile-name" id="other-profile-name">Имя</div>
             <div class="profile-username" id="other-profile-username">@username</div>
             <div class="stats">
                 <div class="stats-item"><b id="other-profile-following">0</b>Подписки</div>
@@ -326,6 +344,8 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
             <div class="profile-actions">
                 <button class="profile-btn primary" id="other-follow-btn" onclick="toggleFollowOther()">Подписаться</button>
                 <button class="profile-btn" onclick="openChatFromProfile()">Сообщение</button>
+                <!-- Кнопка выдачи VIP-галочки видна ТОЛЬКО владельцу/админу -->
+                <button class="profile-btn" id="other-verify-btn" style="display:none;" onclick="toggleVerifyOtherUser()">VIP Галочка</button>
             </div>
             <div class="profile-bio" id="other-profile-bio"></div>
         </div>
@@ -353,6 +373,7 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
         <div class="edit-field"><label>Имя (Ник)</label><input type="text" id="edit-name-input"></div>
         <div class="edit-field"><label>Юзернейм (@)</label><input type="text" id="edit-username-input"></div>
         <div class="edit-field"><label>Описание (Био)</label><textarea id="edit-bio-input" rows="4"></textarea></div>
+        <div class="vip-status-info" id="edit-vip-info"></div>
     </div>
 </div>
 
@@ -422,6 +443,18 @@ body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 10
 <script>
 const MIN_FOLLOWERS_FOR_PIN = 25;
 
+// --- ГЕНЕРАТОР SVG-ГАЛОЧКИ TIKTOK (ТОЛЬКО ДЛЯ VIP) ---
+function getBadgeSVG(small = false) {
+    return `<svg class="tt-verified ${small ? 'tt-verified-sm' : ''}" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="#20D5EC"/><path d="M34.6 17.6L21.4 30.8L13.4 22.8" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function isUserVerified(usernameOrObj) {
+    if (!usernameOrObj) return false;
+    if (typeof usernameOrObj === 'object') return Boolean(usernameOrObj.verified);
+    const u = usersDB.find(x => x.username.toLowerCase() === String(usernameOrObj).toLowerCase());
+    return Boolean(u && u.verified);
+}
+
 // --- УВЕДОМЛЕНИЯ ---
 function showToast(msg) {
     let c = document.getElementById('toast-container');
@@ -430,9 +463,9 @@ function showToast(msg) {
     c.appendChild(t); setTimeout(() => t.remove(), 2600);
 }
 
-// --- ПОЛУЧЕНИЕ НЕИЗМЕНЯЕМОГО TELEGRAM ID И ДАННЫХ ИЗ БОТА ---
+// --- ПОЛУЧЕНИЕ НЕИЗМЕНЯЕМОГО TELEGRAM ID И РОЛИ ИЗ БОТА ---
 const urlParams = new URLSearchParams(window.location.search);
-const botRole = urlParams.get('role') || 'user';
+const botRole = urlParams.get('role') || 'user'; // 'owner', 'admin', 'vip', 'user'
 const urlUid = urlParams.get('uid') || '';
 const urlUn = urlParams.get('un') || '';
 const urlFn = urlParams.get('fn') || '';
@@ -458,6 +491,9 @@ if (window.Telegram && window.Telegram.WebApp) {
     }
 }
 localStorage.setItem('tikstatus_fixed_uid', tgInfo.id);
+
+const isStaff = (botRole === 'owner' || botRole === 'admin');
+const isCurrentUserVip = (botRole === 'vip' || botRole === 'owner');
 
 // --- БАЗА ДАННЫХ INDEXED-DB ---
 const DB_NAME = 'TikstatusFullDB_v2';
@@ -511,7 +547,7 @@ const defaultVideos = [
         views: 4800,
         pinned: false,
         comments: [
-            { id: 'c1', user: 'durov', text: 'Темная тема и полный функционал ТТ 🔥', likes: 85, likedBy: [], pinned: true, replies: [] }
+            { id: 'c1', user: 'durov', text: 'Галочки верификации теперь эксклюзивны для VIP 🔥', likes: 85, likedBy: [], pinned: true, replies: [] }
         ],
         src: 'https://www.w3schools.com/html/mov_bbb.mp4',
         music: 'Оригинальный звук — TikTok Россия'
@@ -523,8 +559,7 @@ const defaultUsers = [
     { id: 'u_pd', username: 'durov', name: 'Pavel Durov', photo: '', bio: 'Founder of Telegram', verified: true, banned: false }
 ];
 
-// Умное слияние пользователей без потери и дублей
-function mergeUserIntoList(list, userObj) {
+function mergeUserIntoList(list, userObj, fromBotSync = false) {
     if (!userObj || !userObj.username) return;
     const cleanUn = String(userObj.username).trim().replace(/^@/, '');
     if (!cleanUn) return;
@@ -541,7 +576,11 @@ function mergeUserIntoList(list, userObj) {
         if (userObj.id && !existing.id) existing.id = String(userObj.id);
         if (userObj.photo && !existing.photo) existing.photo = userObj.photo;
         if (userObj.bio && (!existing.bio || existing.bio === 'Добавьте описание профиля')) existing.bio = userObj.bio;
-        if (userObj.verified) existing.verified = true;
+        if (fromBotSync && typeof userObj.verified === 'boolean') {
+            existing.verified = userObj.verified;
+        } else if (typeof existing.verified !== 'boolean') {
+            existing.verified = Boolean(userObj.verified);
+        }
         if (typeof userObj.banned === 'boolean') existing.banned = userObj.banned;
     } else {
         list.push({
@@ -559,22 +598,17 @@ function mergeUserIntoList(list, userObj) {
 async function loadAllData() {
     await initIndexedDB();
 
-    // 1. Собираем видео из новой и старой баз
     const idbVids = await idbGet('videos');
     const lsVidsNew = JSON.parse(localStorage.getItem('ts_vids') || 'null');
     const lsVidsOld = JSON.parse(localStorage.getItem('tiktok_DB') || 'null');
     DB = idbVids || lsVidsNew || lsVidsOld || defaultVideos;
 
-    // Если в старой базе tiktok_DB остались видео, которых нет в DB — добавляем их
     if (Array.isArray(lsVidsOld)) {
         lsVidsOld.forEach(oldV => {
-            if (oldV && oldV.id && !DB.some(v => v.id === oldV.id)) {
-                DB.push(oldV);
-            }
+            if (oldV && oldV.id && !DB.some(v => v.id === oldV.id)) DB.push(oldV);
         });
     }
 
-    // 2. Собираем пользователей из ВСЕХ источников (IndexedDB + старый localStorage + новый localStorage + Python-бот)
     let combinedUsers = [...defaultUsers];
     const idbUsers = await idbGet('users');
     const lsUsersNew = JSON.parse(localStorage.getItem('ts_users') || '[]');
@@ -588,26 +622,24 @@ async function loadAllData() {
     if (lsOldMyProfile) mergeUserIntoList(combinedUsers, { ...lsOldMyProfile, id: tgInfo.id });
     if (lsBoundProfile) mergeUserIntoList(combinedUsers, { ...lsBoundProfile, id: tgInfo.id });
 
-    // Подтягиваем пользователей, синхронизированных из Python-бота (?usync=...)
+    // Синхронизация VIP-статусов и новых аккаунтов из Python-бота
     if (urlUsersSync) {
         try {
             const decoded = JSON.parse(decodeURIComponent(escape(atob(urlUsersSync))));
             if (Array.isArray(decoded)) {
                 decoded.forEach(item => {
-                    // формат: [id, username, name, verified, banned]
                     mergeUserIntoList(combinedUsers, {
                         id: String(item[0]),
                         username: item[1],
                         name: item[2],
                         verified: Boolean(item[3]),
                         banned: Boolean(item[4])
-                    });
+                    }, true);
                 });
             }
         } catch (e) {}
     }
 
-    // Также добавляем всех авторов видео и комментариев, если их вдруг нет в списке пользователей
     DB.forEach(v => {
         if (v.author) mergeUserIntoList(combinedUsers, { username: v.author, name: v.author });
         if (Array.isArray(v.comments)) {
@@ -621,8 +653,6 @@ async function loadAllData() {
     chatsDB = (await idbGet('chats')) || JSON.parse(localStorage.getItem('ts_chats') || localStorage.getItem('tiktok_chatsDB') || '{}');
     followsDB = (await idbGet('follows')) || JSON.parse(localStorage.getItem('ts_follows') || '[]');
 
-    // 3. ВОССТАНОВЛЕНИЕ И ПРИВЯЗКА ТВОЕГО АККАУНТА ПО TELEGRAM ID
-    // Если раньше создался дубликат с ТГ-ником, а твой измененный аккаунт остался рядом — находим измененный!
     let byId = usersDB.find(u => String(u.id) === String(tgInfo.id));
     const savedCustomUn = localStorage.getItem('tikstatus_custom_un_' + tgInfo.id);
 
@@ -631,25 +661,9 @@ async function loadAllData() {
         if (customAcc) {
             customAcc.id = String(tgInfo.id);
             byId = customAcc;
-            // Удаляем пустой дубликат со старым ТГ-ником, если он создался случайно
             if (tgInfo.username.toLowerCase() !== savedCustomUn.toLowerCase()) {
                 const dupIdx = usersDB.findIndex(u => u !== customAcc && u.username.toLowerCase() === tgInfo.username.toLowerCase() && !DB.some(v => v.author === u.username));
                 if (dupIdx > -1) usersDB.splice(dupIdx, 1);
-            }
-        }
-    } else {
-        // Проверяем, нет ли на устройстве кастомного аккаунта с видео (от прошлой сессии), когда создался пустой дубль с ТГ-ником
-        const customCandidates = usersDB.filter(u => !['tiktok_russia', 'durov'].includes(u.username) && u.username.toLowerCase() !== tgInfo.username.toLowerCase());
-        const tgNickAcc = usersDB.find(u => u.username.toLowerCase() === tgInfo.username.toLowerCase());
-        const tgNickHasVids = tgNickAcc ? DB.some(v => v.author === tgNickAcc.username) : false;
-
-        if (customCandidates.length === 1 && !tgNickHasVids) {
-            const recovered = customCandidates[0];
-            recovered.id = String(tgInfo.id);
-            localStorage.setItem('tikstatus_custom_un_' + tgInfo.id, recovered.username);
-            byId = recovered;
-            if (tgNickAcc && tgNickAcc !== recovered) {
-                usersDB = usersDB.filter(u => u !== tgNickAcc);
             }
         }
     }
@@ -663,17 +677,19 @@ async function loadAllData() {
             name: tgInfo.first_name,
             photo: tgInfo.photo_url,
             bio: 'Добро пожаловать в мой профиль Tikstatus ✨',
-            verified: botRole === 'owner' || botRole === 'vip',
+            verified: isCurrentUserVip,
             banned: false
         };
         usersDB.push(myProfile);
     } else {
         myProfile.id = String(tgInfo.id);
         if (tgInfo.photo_url && !myProfile.photo) myProfile.photo = tgInfo.photo_url;
-        if (botRole === 'owner' || botRole === 'vip') myProfile.verified = true;
+        // Если зашли через бота — галочка строго соответствует VIP/Owner статусу
+        if (urlParams.has('role')) {
+            myProfile.verified = isCurrentUserVip;
+        }
     }
 
-    localStorage.setItem('tikstatus_bound_profile_' + tgInfo.id, JSON.stringify(myProfile));
     saveData();
     updateProfileUI();
     renderFeed();
@@ -785,7 +801,7 @@ function renderFeed(scrollToVideoId = null) {
         const isLiked = v.likedBy.includes(myProfile.username);
         const isBookmarked = v.bookmarkedBy.includes(myProfile.username);
         const isFollowingAuthor = followsDB.some(f => f.follower === myProfile.username && f.target === v.author);
-        const showFollowPlus = v.author !== myProfile.username;
+        const showFollowPlus = v.author.toLowerCase() !== myProfile.username.toLowerCase();
 
         const repostText = v.repostedBy.length > 0 ? `<div class="repost-badge">🔁 Репостнул(а) @${v.repostedBy[v.repostedBy.length - 1]}</div>` : '';
 
@@ -799,7 +815,8 @@ function renderFeed(scrollToVideoId = null) {
             <div class="video-info">
                 ${repostText}
                 <div class="video-author" onclick="openOtherProfile('${v.author}')">
-                    @${v.author} ${authorObj.verified ? '<span class="verified-badge">✔</span>' : ''}
+                    <span>@${v.author}</span>
+                    ${authorObj.verified ? getBadgeSVG() : ''}
                 </div>
                 <div class="video-desc">${v.desc}</div>
                 <div class="music-row">
@@ -998,7 +1015,7 @@ function quickFollowFromFeed(targetUser, vidId) {
 }
 
 function toggleFollowUser(targetUsername) {
-    if (targetUsername === myProfile.username) return;
+    if (targetUsername.toLowerCase() === myProfile.username.toLowerCase()) return;
     const idx = followsDB.findIndex(f => f.follower === myProfile.username && f.target === targetUsername);
     if (idx > -1) {
         followsDB.splice(idx, 1);
@@ -1028,9 +1045,11 @@ function canUserPin(username) {
 }
 
 function updateProfileUI() {
-    document.getElementById('profile-top-name').innerText = myProfile.name;
-    document.getElementById('profile-name').innerHTML = `${myProfile.name} ${myProfile.verified ? '<span class="verified-badge">✔</span>' : ''}`;
-    document.getElementById('profile-username').innerText = '@' + myProfile.username;
+    const badge = myProfile.verified ? getBadgeSVG() : '';
+    const vipTag = myProfile.verified ? '<span class="vip-pill-tag">VIP</span>' : '';
+    document.getElementById('profile-top-name').innerHTML = `<span>${myProfile.name}</span> ${badge}`;
+    document.getElementById('profile-name').innerHTML = `<span>${myProfile.name}</span> ${badge} ${vipTag}`;
+    document.getElementById('profile-username').innerHTML = `<span>@${myProfile.username}</span>`;
     document.getElementById('profile-bio').innerText = myProfile.bio || '';
     document.getElementById('profile-avatar').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : '👤';
 
@@ -1061,15 +1080,40 @@ function openOtherProfile(username) {
     if (username.toLowerCase() === myProfile.username.toLowerCase()) return switchPage('profile');
     currentOtherUser = usersDB.find(u => u.username.toLowerCase() === username.toLowerCase()) || { username, name: username, photo: '', bio: 'Пользователь Tikstatus', verified: false };
 
-    document.getElementById('other-profile-top-name').innerText = currentOtherUser.name;
-    document.getElementById('other-profile-name').innerHTML = `${currentOtherUser.name} ${currentOtherUser.verified ? '<span class="verified-badge">✔</span>' : ''}`;
-    document.getElementById('other-profile-username').innerText = '@' + currentOtherUser.username;
-    document.getElementById('other-profile-bio').innerText = currentOtherUser.bio || '';
-    document.getElementById('other-profile-avatar').innerHTML = currentOtherUser.photo ? `<img src="${currentOtherUser.photo}">` : '👤';
-
+    renderOtherProfileHeader();
     updateOtherProfileFollowUI();
     switchOtherProfileTab('videos');
     switchPage('other-profile');
+}
+
+function renderOtherProfileHeader() {
+    if (!currentOtherUser) return;
+    const badge = currentOtherUser.verified ? getBadgeSVG() : '';
+    const vipTag = currentOtherUser.verified ? '<span class="vip-pill-tag">VIP</span>' : '';
+    document.getElementById('other-profile-top-name').innerHTML = `<span>${currentOtherUser.name}</span> ${badge}`;
+    document.getElementById('other-profile-name').innerHTML = `<span>${currentOtherUser.name}</span> ${badge} ${vipTag}`;
+    document.getElementById('other-profile-username').innerHTML = `<span>@${currentOtherUser.username}</span>`;
+    document.getElementById('other-profile-bio').innerText = currentOtherUser.bio || '';
+    document.getElementById('other-profile-avatar').innerHTML = currentOtherUser.photo ? `<img src="${currentOtherUser.photo}">` : '👤';
+
+    const vBtn = document.getElementById('other-verify-btn');
+    if (vBtn) {
+        if (isStaff) {
+            vBtn.style.display = 'inline-flex';
+            vBtn.innerHTML = `${getBadgeSVG(true)} <span>${currentOtherUser.verified ? 'Забрать VIP' : 'Выдать VIP'}</span>`;
+            vBtn.className = currentOtherUser.verified ? 'profile-btn verify-active' : 'profile-btn';
+        } else {
+            vBtn.style.display = 'none';
+        }
+    }
+}
+
+function toggleVerifyOtherUser() {
+    if (!isStaff || !currentOtherUser) return showToast('Только Владелец или Админ может выдавать VIP!');
+    currentOtherUser.verified = !currentOtherUser.verified;
+    saveData();
+    renderOtherProfileHeader();
+    showToast(currentOtherUser.verified ? `VIP и галочка выданы @${currentOtherUser.username}!` : `VIP снят у @${currentOtherUser.username}`);
 }
 
 function updateOtherProfileFollowUI() {
@@ -1156,7 +1200,7 @@ function renderCommentsList(v) {
         if (!c.likedBy) c.likedBy = [];
         if (!c.replies) c.replies = [];
         const isLiked = c.likedBy.includes(myProfile.username);
-        const uObj = usersDB.find(u => u.username.toLowerCase() === c.user.toLowerCase()) || { photo: '' };
+        const uObj = usersDB.find(u => u.username.toLowerCase() === c.user.toLowerCase()) || { photo: '', verified: false };
 
         return `
         <div class="comment-item">
@@ -1165,7 +1209,8 @@ function renderCommentsList(v) {
                     <div class="comment-avatar" onclick="openOtherProfile('${c.user}')">${uObj.photo ? `<img src="${uObj.photo}">` : '👤'}</div>
                     <div style="flex:1;">
                         <div class="comment-user" onclick="openOtherProfile('${c.user}')">
-                            @${c.user}
+                            <span>@${c.user}</span>
+                            ${uObj.verified ? getBadgeSVG(true) : ''}
                             ${c.user.toLowerCase() === v.author.toLowerCase() ? '<span class="author-tag">• Автор</span>' : ''}
                             ${c.pinned ? '<span class="pinned-badge">📌 Закреплено</span>' : ''}
                         </div>
@@ -1181,11 +1226,13 @@ function renderCommentsList(v) {
                     <span>${c.likes || 0}</span>
                 </div>
             </div>
-            ${c.replies.length ? `<div class="replies-wrap">${c.replies.map(r => `
+            ${c.replies.length ? `<div class="replies-wrap">${c.replies.map(r => {
+                const rVerified = isUserVerified(r.user);
+                return `
                 <div style="margin-top:8px;font-size:13px;color:#ddd;">
-                    <b onclick="openOtherProfile('${r.user}')" style="color:#999;cursor:pointer;">@${r.user}:</b> ${r.text}
-                </div>
-            `).join('')}</div>` : ''}
+                    <b onclick="openOtherProfile('${r.user}')" style="color:#999;cursor:pointer;display:inline-flex;align-items:center;">@${r.user}${rVerified ? getBadgeSVG(true) : ''}:</b> ${r.text}
+                </div>`;
+            }).join('')}</div>` : ''}
         </div>`;
     }).join('');
 }
@@ -1341,12 +1388,11 @@ function sendVideoToUser(username) {
     showToast('Видео отправлено пользователю @' + username + ' ✈️');
 }
 
-// --- ПОИСК (ПОКАЗЫВАЕТ ВСЕ НОВЫЕ АККАУНТЫ СРАЗУ И ПРИ ПОИСКЕ) ---
+// --- ПОИСК ---
 function handleSearch(query) {
     const q = (query || '').trim().toLowerCase().replace(/^@/, '');
     const activeUsers = usersDB.filter(u => !u.banned);
 
-    // Сортируем так, чтобы реальные и новые аккаунты шли первыми
     const sortedUsers = [...activeUsers].reverse();
     const list = q
         ? sortedUsers.filter(u => u.username.toLowerCase().includes(q) || (u.name || '').toLowerCase().includes(q))
@@ -1363,8 +1409,9 @@ function handleSearch(query) {
             <div class="user-result-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
             <div class="user-result-info">
                 <div class="user-result-name">
-                    ${u.name} ${u.verified ? '<span class="verified-badge">✔</span>' : ''}
-                    ${u.id === myProfile.id ? '<span style="font-size:11px;color:#fe2c55;margin-left:4px;">(Вы)</span>' : ''}
+                    <span>${u.name}</span>
+                    ${u.verified ? getBadgeSVG() : ''}
+                    ${u.id === myProfile.id ? '<span style="font-size:11px;color:#fe2c55;margin-left:5px;">(Вы)</span>' : ''}
                 </div>
                 <div class="user-result-username">@${u.username} • ${formatNumber(getStatsForUser(u.username).followers)} подписчиков • ${vidsCount} видео</div>
             </div>
@@ -1389,7 +1436,7 @@ function renderChatList() {
         <div class="chat-item" onclick="openChat('${u.username}')">
             <div class="chat-avatar">${u.photo ? `<img src="${u.photo}">` : '👤'}</div>
             <div class="chat-info">
-                <div class="chat-name">${u.name} (@${u.username})</div>
+                <div class="chat-name"><span>${u.name}</span> ${u.verified ? getBadgeSVG(true) : ''} <span style="color:#777;font-weight:400;font-size:13px;margin-left:5px;">@${u.username}</span></div>
                 <div class="chat-msg">${last}</div>
             </div>
         </div>`;
@@ -1397,8 +1444,8 @@ function renderChatList() {
 }
 
 function openChat(username) {
-    activeChatUser = usersDB.find(u => u.username.toLowerCase() === username.toLowerCase()) || { username, name: username, photo: '' };
-    document.getElementById('chat-room-name').innerText = activeChatUser.name;
+    activeChatUser = usersDB.find(u => u.username.toLowerCase() === username.toLowerCase()) || { username, name: username, photo: '', verified: false };
+    document.getElementById('chat-room-name').innerHTML = `<span>${activeChatUser.name}</span> ${activeChatUser.verified ? getBadgeSVG() : ''}`;
     renderChatMessages();
     switchPage('chat-room');
 }
@@ -1429,7 +1476,7 @@ function sendChatMessage() {
     renderChatMessages();
 }
 
-// --- РЕДАКТИРОВАНИЕ ПРОФИЛЯ (НАМЕРТВО ПРИВЯЗАНО К ID) ---
+// --- РЕДАКТИРОВАНИЕ ПРОФИЛЯ (ГАЛОЧКА ТОЛЬКО У VIP) ---
 let tempAvatar = null;
 
 function openEditProfile() {
@@ -1438,6 +1485,13 @@ function openEditProfile() {
     document.getElementById('edit-username-input').value = myProfile.username;
     document.getElementById('edit-bio-input').value = myProfile.bio || '';
     document.getElementById('edit-avatar-preview').innerHTML = myProfile.photo ? `<img src="${myProfile.photo}">` : '👤';
+
+    const vipInfo = document.getElementById('edit-vip-info');
+    if (myProfile.verified) {
+        vipInfo.innerHTML = `<span>Статус аккаунта: <b style="color:#20d5ec;">VIP (Верифицирован)</b></span> ${getBadgeSVG()}`;
+    } else {
+        vipInfo.innerHTML = `<span>Статус аккаунта: <b>Обычный</b> (Галочка доступна только для VIP)</span>`;
+    }
     switchPage('edit-profile');
 }
 
@@ -1472,7 +1526,7 @@ function saveProfile() {
         });
     }
 
-    myProfile.id = String(tgInfo.id); // Жесткая фиксация ID
+    myProfile.id = String(tgInfo.id);
     myProfile.name = newName;
     myProfile.username = newUn;
     myProfile.bio = document.getElementById('edit-bio-input').value.trim();
@@ -1480,7 +1534,7 @@ function saveProfile() {
 
     saveData();
     updateProfileUI();
-    showToast('Профиль сохранен и закреплен за вами ✅');
+    showToast('Профиль сохранен ✅');
     switchPage('profile');
 }
 
